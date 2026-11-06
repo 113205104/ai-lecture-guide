@@ -33,15 +33,14 @@ html { overflow-x: auto; }
 #editor select,
 #editor input { max-inline-size: 100%; box-sizing: border-box; }
 
-/* 手機與平板的編輯視窗加高，超出的內容沿用彈窗內捲動。 */
+/* 手機與平板依實際可見畫面放大彈窗；講義畫布寬度不變。 */
 @media (max-width: 1119px) {
   #editor {
-    height: 75vh;
-    height: 75dvh;
-    min-height: 65vh;
-    min-height: 65dvh;
-    max-height: 90vh;
-    max-height: 90dvh;
+    width: calc(var(--guide-editor-viewport-width, 100vw) * .9);
+    max-width: calc(var(--guide-editor-viewport-width, 100vw) * .96);
+    height: calc(var(--guide-editor-viewport-height, 100dvh) * .75);
+    min-height: calc(var(--guide-editor-viewport-height, 100dvh) * .65);
+    max-height: calc(var(--guide-editor-viewport-height, 100dvh) * .9);
   }
 }
 
