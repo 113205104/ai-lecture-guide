@@ -11,7 +11,7 @@ let html = template.replace('<!--CONFIG-->', () => '<script>window.guideConfig='
 const editor = fs.readFileSync(path.join(__dirname, 'editor-source.js'), 'utf8');
 // 編輯器與網站一起封裝，網站儲存時改呼叫具登入權限的雲端資料庫。
 const cloudEditor = 'const publicTemplate=' + JSON.stringify(template).replace(/</g, '\\u003c') + ';\n' + editor;
-const cloudFiles = ['cloud.mjs', 'firebase-config.json', 'desktop-view.css'];
+const cloudFiles = ['cloud.mjs', 'firebase-config.json', 'desktop-view.css', 'guide-data.mjs', 'guide-import.mjs', 'publish-bridge.mjs'];
 html += '<link rel="stylesheet" href="./desktop-view.css"><script type="module" src="./cloud.mjs"></script>';
 fs.mkdirSync(path.join(__dirname, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(__dirname, 'dist', 'index.html'), html);

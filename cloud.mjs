@@ -69,11 +69,17 @@ try {
       }
     } catch (error) { showNotice(message(error)); }
   };
+  const {setupPublishBridge} = await import('./publish-bridge.mjs');
+  const bridge = setupPublishBridge({
+    getState: () => !auth.currentUser ? 'signed-out' : isOwner(auth.currentUser) && window.guideCloud ? 'owner' : 'other',
+    login: () => login.click(),
+    save: data => window.guideCloud.save(data)
+  });
   onAuthStateChanged(auth, async user => {
     login.textContent = user ? '登出' : '⚙';
     login.setAttribute('aria-label', user ? '登出' : '講者登入');
-    if (!user) return;
-    if (!isOwner(user)) { showNotice('目前帳號可閱讀，沒有講者編輯權限。'); return; }
+    if (!user) { bridge.refresh(); return; }
+    if (!isOwner(user)) { showNotice('目前帳號可閱讀，沒有講者編輯權限。'); bridge.refresh(); return; }
     try {
       // 登入後再次拿最新版，儲存以版本號檢查其他裝置的修改。
       apply(await getDocFromServer(ref));
@@ -102,7 +108,10 @@ try {
       }
       login.classList.remove('guide-cloud-login');
       document.getElementById('guide-menu').append(login);
+      const {installGuideImport} = await import('./guide-import.mjs');
+      installGuideImport({menu:document.getElementById('guide-menu'),save:data => window.guideCloud.save(data)});
       panel.hidden = true;
+      bridge.refresh();
     } catch (error) { showNotice(message(error)); }
   });
 } catch (error) { showNotice(message(error)); }

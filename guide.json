@@ -53,6 +53,67 @@
       ],
       "pages": [
         {
+          "name": "AI 如何選擇？",
+          "columns": 4,
+          "items": [
+            [
+              "01",
+              "Chat GPT",
+              "",
+              "資料分析、研究規劃、工具整合",
+              "",
+              "<br>",
+              [],
+              false,
+              false
+            ],
+            [
+              "02",
+              "Claude",
+              "",
+              "長文件閱讀、寫作、程式開發",
+              "",
+              "<br>",
+              [],
+              false,
+              false
+            ],
+            [
+              "03",
+              "Gemini",
+              "",
+              "文件理解",
+              "",
+              "<br>",
+              [],
+              false,
+              false
+            ],
+            [
+              "04",
+              "Grok",
+              "",
+              "事實可靠性需查證",
+              "",
+              "<br>",
+              [],
+              false,
+              false
+            ],
+            [
+              "05",
+              "Deep Seek",
+              "",
+              "事實可靠性需查證",
+              "",
+              "<br>",
+              [],
+              false,
+              false
+            ]
+          ]
+        },
+        {
           "name": "從 AI 問答到 AI 工作流",
           "columns": 2,
           "items": [
@@ -60,17 +121,18 @@
               "01",
               "傳統 AI 問答",
               "",
-              "向 ChatGPT 詢問問題、摘要文章、修改文字、產生程式碼或推薦工具。接著由你自行安裝套件、執行程式與處理錯誤。",
+              "向 AI 提問<br>：幫我整理摘要<br>：幫我修改文字<br>：幫我寫程式腳本<br><br>AI 再回傳檔案<div><div><font style=\"color: rgb(23, 107, 115); font-size: 18px;\"><b>→需要自行安裝套件、執行程式與處理錯誤</b></font></div></div>",
               "",
-              "",
+              "<br>",
               [],
+              false,
               false
             ],
             [
               "02",
               "AI Agent",
               "",
-              "你交辦：「把這個資料夾內的 PDF 全部轉換成 Markdown。」<br><br>檢查檔案<br>↓<br>選擇適合的轉換工具<br>↓<br>執行程式<br>↓<br>檢查轉換結果<br>↓<br>整理輸出檔案",
+              "向 AI 交辦：幫我撰寫去除文字註記與多於黑邊的影像處理腳本，並將此目錄之影像資料處理完成後輸出至新資料夾。<br><br>檢查檔案<br>↓<br>選擇適合的轉換、編輯工具<br>↓<br>執行程式<br>↓<br>檢查轉換結果<br>↓<br>整理輸出檔案<div><br></div><div><b style=\"color: rgb(23, 107, 115); font-size: 18px;\">→</b><b style=\"color: rgb(23, 107, 115); font-size: 18px;\">僅</b><b style=\"color: rgb(23, 107, 115); font-size: 18px;\">確認成果檔案，</b><b style=\"color: rgb(23, 107, 115); font-size: 18px;\">流程自動化，免自行安裝、執行程式</b></div>",
               "",
               "",
               [],
@@ -78,30 +140,29 @@
             ],
             [
               "01",
-              "用人、事、時、地、物、法交代需求",
+              "資安與個人化設定",
               "",
-              "說清楚使用者、要做的事、時間、情境、材料與處理方式。",
+              "<font><font style=\"color: rgb(204, 0, 0);\"><b>關閉供所有人訓練模型<br></b></font></font>調整 AI 的回應風格，少說廢話，提高回答品質",
               "",
-              "",
-              [],
-              false
-            ],
-            [
-              "01",
-              "把發散的想法整理成任務<br>",
-              "GPT 網頁版",
-              "<b><font style=\"font-size: 18px;\">人+事+(時、地)+物提問法</font><br></b>將目標、使用條件、材料與限制，整理成能執行、能檢查的任務<br><br>",
-              "https://chatgpt.com/",
-              "以下是我的想法：……\n請整理目標、使用對象、使用條件、輸入材料、執行順序及驗收標準。分開列出已確認需求、建議與待確認事項。",
+              "<br>",
               []
             ],
             [
               "02",
+              "<b><font style=\"font-size: 24px;\">人+事+(時、地)+物提問法交代需求</font></b><br>",
+              "GPT 網頁版",
+              "<b><font style=\"color: rgb(23, 107, 115); font-size: 18px;\">把發散的想法整理成任務</font><br></b>將使用者、目標、材料與限制，整理成可行方案<br>",
+              "https://chatgpt.com/",
+              "我是研究所的學生，我想做關於超音波醫學影像的研究，：……\n請整理目標、使用對象、使用條件、輸入材料、執行順序及驗收標準。分開列出已確認需求、建議與待確認事項。",
+              []
+            ],
+            [
+              "03",
               "將反覆使用的長文件轉Markdown檔",
               "Markdown · 文件整理",
               "<font style=\"color: rgb(5, 5, 5);\">針對網頁版中，需反覆使用之長文件，</font><font style=\"color: rgb(233, 9, 9);\"><b>桌面版不需要</b></font>",
               "https://github.com/microsoft/markitdown",
-              "請依章節整理這份文件，保留來源資訊與圖表編號。資訊缺漏或擷取異常的地方請標記。",
+              "<br>",
               [
                 [
                   "MarkItDown",
@@ -111,12 +172,18 @@
                   "Docling",
                   "https://github.com/docling-project/docling"
                 ]
-              ]
+              ],
+              false,
+              false
             ]
           ],
           "sectionTitles": {
             "0": "傳統問答 vs AI Agent",
-            "2": "提問與反覆使用的長文件"
+            "2": "網頁版提問 AI 與檔案上傳？"
+          },
+          "sectionColumns": {
+            "0": 3,
+            "2": 3
           }
         },
         {
@@ -265,7 +332,17 @@
               "",
               "手機可作為遠端入口，依已設定的功能查看進度或交辦任務。",
               "",
-              "查看Codex進度<p><strong>第一次先配對。</strong> 更新 Windows 上的 ChatGPT 桌面 App 和手機上的 ChatGPT App。在電腦開啟 <strong>Settings → Connections → Control this Mac or PC → Set up／Add</strong>。用手機掃描電腦顯示的 QR code，在 ChatGPT 裡確認兩端使用<strong>同一個帳號和工作區</strong>，再完成配對。 <a href=\"https://learn.chatgpt.com/docs/remote-connections\" target=\"_blank\" rel=\"noopener noreferrer\">OpenAI 遠端連線設定</a></p><p>配對後，在手機 ChatGPT App 開啟 <strong>Codex</strong>（有些版本顯示 <strong>Remote</strong>），選擇這台 Windows 電腦，再打開<strong>原本的對話</strong>。你可以看執行進度、輸出和檔案變更，也能補充指示，或在出現核准要求時查看細節再決定。想確認這個 AI-workshop 專案的工作，就從這台主機打開該專案的對話。 <a href=\"https://learn.chatgpt.com/docs/mobile\" target=\"_blank\" rel=\"noopener noreferrer\">OpenAI 手機版 Codex 指南</a></p>3. 從手機交辦任務給電腦上的 Codex<p>在手機的 <strong>Codex／Remote</strong> 選擇 <strong>Windows 主機 → AI-workshop 專案</strong>，開新對話後直接輸入任務。如果是接續正在做的事，就在原對話追加指示。要讀取這台電腦的本機檔案時，請選這台 Windows 主機。 <a href=\"https://learn.chatgpt.com/docs/mobile\" target=\"_blank\" rel=\"noopener noreferrer\">OpenAI 手機版 Codex 指南</a></p><p>可以先用這個任務測試連線：</p>請讀取 AI-workshop 專案，告訴我這個專案的用途、主要檔案，以及如何在 Windows 上執行。先只檢查並回報。<p>如果要讓 <strong>Codex 代你點選 Windows 應用程式</strong>，先在電腦端的 <strong>Plugins → Computer Use</strong> 安裝並啟用，再從手機交辦，例如「使用 @Computer 開啟記事本，輸入『手機遠端測試』，停在畫面上讓我確認」。</p>",
+              "<font style=\"font-size: 18px;\"><b><font style=\"color: rgb(0, 0, 0);\">查看Codex進度</font><font style=\"color: rgb(245, 61, 61);\">：</font></b><b><font style=\"color: rgb(245, 61, 61);\">第一次先配對（</font><font style=\"color: rgb(245, 61, 61);\">兩端使用</font><span style=\"color: rgb(245, 61, 61);\">同一個帳號和工作區）</span></b></font><div><font style=\"color: rgb(13, 12, 12);\">電腦開啟 <strong>Settings → Connections → Control this Mac or PC → Set up／Add</strong></font><div><font style=\"color: rgb(13, 12, 12);\">手機掃描電腦顯示的 <b>QR code</b><br></font></div><div><font style=\"color: rgb(13, 12, 12);\"><font style=\"font-size: 24px;\">→&nbsp;</font><font style=\"font-size: 18px;\">完成配對</font></font></div><div><font style=\"color: rgb(13, 12, 12);\"><font style=\"font-size: 18px;\"><br></font></font></div><div><font style=\"color: rgb(13, 12, 12);\"><font style=\"font-size: 18px;\"><b>手機交辦任務給電腦上的 Codex：</b></font></font><p><font style=\"color: rgb(13, 12, 12);\">在<b>手機的 Codex／Remote 選擇 Windows 主機 → 指定專案</b>，開新對話後直接輸入任務。如果是接續正在做的事，就在原對話追加指示。要讀取這台電腦的本機檔案時，請選這台 Windows 主機。</font></p><p><font style=\"color: rgb(13, 12, 12);\">※&nbsp;<strong>Codex 代你點選 Windows 應用程式</strong>，先在電腦端的 <strong>Plugins → Computer Use</strong> 安裝並啟用，再從手機交辦</font></p></div></div>",
+              [],
+              false
+            ],
+            [
+              "07",
+              "實際確認",
+              "",
+              "親自在電腦查閱 AI 是否真正完成任務",
+              "",
+              "<br>",
               [],
               false
             ]
@@ -396,9 +473,9 @@
               "01",
               "建議書生成簡報",
               "GPT → Gamma",
-              "先確認報告主線，再將建議書與大綱轉成簡報初稿。",
+              "先確認報告主線，將大綱與內容整理成.md檔案，再轉成簡報初稿。",
               "https://gamma.app/",
-              "請將這份建議書整理成 8 張投影片的大綱，每張只保留一個主要訊息，並標示需要補充的證據。",
+              "1. AI 整理簡報大綱與內容，產生簡報.md<div>2. 開啟Gamma，選擇簡報風格，上傳簡報.md<br>3.下載.pptx微調排版</div>",
               [
                 [
                   "GPT",
@@ -408,7 +485,8 @@
                   "Gamma",
                   "https://gamma.app/"
                 ]
-              ]
+              ],
+              false
             ],
             [
               "02",
@@ -416,7 +494,7 @@
               "NotebookLM · GPT · Anki",
               "以講義整理重點、回查來源，並根據課程內容模擬出題。",
               "https://notebooklm.google.com/",
-              "筆記整理：提供講義與自己的筆記，整理章節重點、概念比較表與不理解的問題，回查來源。\n考前模擬：依課程目標、講義與歷屆試題產生練習題，作答後整理弱點；Anki 作為小卡與長期複習補充。\n\n提示詞：請根據講義整理概念比較表，再一次出一題考前練習。等我回答後再解釋並指出需要複習的內容。",
+              "筆記整理：提供講義與自己的筆記，整理章節重點、概念比較表與不理解的問題，回查來源。\n考前模擬：依課程目標、講義與歷屆試題產生練習題，作答後整理弱點；Anki 作為小卡與長期複習補充。<br><br>提示詞：請根據講義整理概念比較表，再一次出一題考前練習。等我回答後再解釋並指出需要複習的內容。",
               [
                 [
                   "NotebookLM",
@@ -440,23 +518,8 @@
         },
         {
           "name": "專題、論文與研究",
-          "columns": 2,
+          "columns": 3,
           "items": [
-            [
-              "多模型比較",
-              "ChatHub",
-              "",
-              "並排比較不同 AI 模型的回覆。",
-              "",
-              "把同一份研究構想交給不同模型，對照問題拆解、研究範圍與可行性。",
-              [
-                [
-                  "ChatHub",
-                  "https://chathub.gg/"
-                ]
-              ],
-              false
-            ],
             [
               "01",
               "研究定題與搜尋",
@@ -472,12 +535,23 @@
                 [
                   "Claude",
                   "https://claude.ai/"
-                ],
-                [
-                  "Elicit",
-                  "https://elicit.com/"
                 ]
               ]
+            ],
+            [
+              "02",
+              "ChatHub",
+              "",
+              "多模型比較，並排比較不同 AI 模型的回覆。",
+              "",
+              "把同一份研究構想交給不同模型，對照問題拆解、研究範圍與可行性。",
+              [
+                [
+                  "ChatHub",
+                  "https://chathub.gg/"
+                ]
+              ],
+              true
             ],
             [
               "文獻探索",
@@ -515,7 +589,7 @@
               "GPT → 文獻搜尋 → Litmaps",
               "從中文想法拆出英文概念與搜尋式，找到種子文獻後延伸探索，銜接研究單元。",
               "https://chatgpt.com/",
-              "我的專題是……。請列出中英文關鍵字、同義詞與三組由廣到窄的搜尋式，先不要列文獻。\n接著到適合學科的資料庫搜尋，選一篇相關文獻，再以 Litmaps 延伸探索。",
+              "我的專題題目是……，(可加入實驗構想流程或期望成果之描述)。請列出中英文關鍵字、同義詞與三組由廣到窄的搜尋式，先不急著列文獻。\n接著到適合學科的資料庫搜尋，選1～2篇最相關文獻，再以 Litmaps 延伸探索。",
               [
                 [
                   "GPT",
@@ -525,7 +599,27 @@
                   "Litmaps",
                   "https://www.litmaps.com/"
                 ]
-              ]
+              ],
+              true
+            ],
+            [
+              "03",
+              "專題找文獻：從關鍵字開始",
+              "GPT → 文獻搜尋 → Litmaps",
+              "從中文想法拆出英文概念與搜尋式，找到種子文獻後延伸探索，銜接研究單元。",
+              "https://chatgpt.com/",
+              "我的專題題目是……，(可加入實驗構想流程或期望成果之描述)。請列出中英文關鍵字、同義詞與三組由廣到窄的搜尋式，先不急著列文獻。\n接著到適合學科的資料庫搜尋，選1～2篇最相關文獻，再以 Litmaps 延伸探索。",
+              [
+                [
+                  "GPT",
+                  "https://chatgpt.com/"
+                ],
+                [
+                  "Litmaps",
+                  "https://www.litmaps.com/"
+                ]
+              ],
+              true
             ],
             [
               "文獻閱讀",
@@ -991,7 +1085,7 @@
     ]
   ],
   "pageTitles": [
-    "基本功",
+    "AI有哪些？如何使用？",
     "AI 工具與網站",
     "建立 AI 工作流",
     "AI 限制與倫理"
@@ -1077,7 +1171,7 @@
   },
   "style": {},
   "position": {
-    "group": 0,
+    "group": 3,
     "page": 0
   },
   "layoutVersion": 2

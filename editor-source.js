@@ -566,12 +566,43 @@ if(location.protocol==='file:'||window.guideCloud){
  action(footer,'取消',cancel);
  action(footer,'完成',commit);
  editor.addEventListener('cancel',e=>{e.preventDefault();cancel();});
+ let pendingPublish;
+ const publishOnline=guide=>{
+  pendingPublish?.cancel();
+  const channel=crypto.randomUUID();
+  const destination='https://113205104.github.io/ai-lecture-guide/';
+  const origin=new URL(destination).origin;
+  const popup=window.open(destination+'?update=1#channel='+channel,'_blank');
+  saveNotice.hidden=false;
+  if(!popup){saveNotice.textContent='HTML 備份已下載，但更新視窗未能開啟。請允許此頁開啟彈出視窗，再按「匯出」。';return;}
+  const credentialKey='lecture-guide-online-pair-v1';
+  let credentials;
+  try{credentials=JSON.parse(localStorage.getItem(credentialKey));}catch{}
+  const snapshot=structuredClone(guide);
+  saveNotice.textContent='HTML 備份已下載。正在開啟更新頁；首次使用請在更新頁登入並允許連結。';
+  const cleanup=()=>{window.removeEventListener('message',receive);clearTimeout(timer);pendingPublish=null;};
+  const receive=event=>{
+   if(event.source!==popup||event.origin!==origin||event.data?.type!=='guide-sync'||event.data.channel!==channel)return;
+   const message=event.data;
+   if(message.action==='ready')popup.postMessage({type:'guide-sync',action:'publish',channel,guide:snapshot,credentials},origin);
+   if(message.action==='paired'){
+    credentials=message.credentials;
+    try{localStorage.setItem(credentialKey,JSON.stringify(credentials));}catch{}
+   }
+   if(message.action==='complete'){saveNotice.textContent='HTML 備份已下載，線上講義也已更新成功。';cleanup();}
+   if(message.action==='error'){saveNotice.textContent='HTML 備份已下載，線上更新未完成：'+message.message;cleanup();}
+  };
+  window.addEventListener('message',receive);
+  const timer=setTimeout(()=>{saveNotice.textContent='HTML 備份已下載，但尚未收到線上更新完成的訊息。請查看更新頁；不要把本機備份視為已同步。';cleanup();},600000);
+  pendingPublish={cleanup,cancel:()=>{popup.postMessage({type:'guide-sync',action:'cancel',channel},origin);popup.close();cleanup();}};
+ };
  action(menu,'匯出',()=>{
   closeMenu();
   const json=JSON.stringify(draft).replace(/</g,'\\u003c');
   const html=publicTemplate.replace('<!--CONFIG-->',()=>'<script>window.guideConfig='+json+';</scr'+'ipt>');
   const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
   const link=document.createElement('a');link.href=url;link.download='index.html';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  if(location.protocol==='file:')publishOnline(draft);
  });
  renderEditor();
 }

@@ -1,21 +1,24 @@
 /* 同一個電腦版畫布；手機與平板透過橫向捲動查看，不改排欄數。 */
 html { overflow-x: auto; }
-body { width: auto; min-width: 1120px; max-width: none; margin: 0; }
-.lecture-mock { padding: clamp(18px, 3vw, 48px); max-width: 1600px; margin-inline: auto; }
-.lecture-mock h2 { font-size: var(--guide-main-size, 30px); }
-.lecture-mock nav .lg-tab,
-.lecture-mock nav .lg-tab[aria-selected="true"] { font-size: 16px; padding: 16px 6px; }
-.lecture-mock .lg-filter-options button { font-size: 14px; }
-.lecture-mock .lg-grid.guide-custom-layout {
-  grid-template-columns: repeat(var(--guide-columns), minmax(0, 1fr));
+/* 電腦的字級、色彩、寬度與留白完全沿用使用者匯出的 HTML。 */
+@media (max-width: 1119px) {
+  body { width: 1120px; min-width: 1120px; }
+  .lecture-mock { padding: 33.6px; }
+  .lecture-mock h2 { font-size: var(--guide-main-size, 30px); }
+  .lecture-mock nav .lg-tab,
+  .lecture-mock nav .lg-tab[aria-selected="true"] { font-size: 16px; padding: 16px 6px; }
+  .lecture-mock .lg-filter-options button { font-size: 14px; }
+  .lecture-mock .lg-grid.guide-custom-layout {
+    grid-template-columns: repeat(var(--guide-columns), minmax(0, 1fr));
+  }
+  .lecture-mock .guide-section-grid {
+    grid-template-columns: repeat(var(--guide-section-columns), minmax(0, 1fr));
+  }
+  .lecture-mock .lg-grid.lg-research { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lecture-mock .guide-section-heading { font-size: 22px; }
+  .lecture-focus article { padding: 28px; }
+  .lecture-focus article h3 { font-size: var(--guide-card-title-size, 30px); }
 }
-.lecture-mock .guide-section-grid {
-  grid-template-columns: repeat(var(--guide-section-columns), minmax(0, 1fr));
-}
-.lecture-mock .lg-grid.lg-research { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.lecture-mock .guide-section-heading { font-size: 22px; }
-.lecture-focus article { padding: 28px; }
-.lecture-focus article h3 { font-size: var(--guide-card-title-size, 30px); }
 
 /* 對話框是小螢幕的視窗，內部保留約 640px 的桌面編輯區，可左右滑動。 */
 #editor {
@@ -43,3 +46,12 @@ body { width: auto; min-width: 1120px; max-width: none; margin: 0; }
 }
 .guide-cloud-status[hidden] { display: none; }
 .guide-cloud-status p { margin: 0; }
+.guide-transfer-dialog {
+  width: min(520px, calc(100vw - 40px)); box-sizing: border-box;
+  max-height: 90dvh; overflow: auto; padding: 24px;
+  border: 1px solid #acc6c0; border-radius: 16px;
+  background: #f3f7f7; color: #203c43; font: 16px/1.6 system-ui;
+}
+.guide-transfer-dialog::backdrop { background: #183c4355; }
+.guide-transfer-dialog h2 { margin-top: 0; }
+.guide-transfer-dialog button { margin: 6px 8px 0 0; padding: 9px 14px; font: inherit; }
