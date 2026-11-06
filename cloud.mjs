@@ -20,7 +20,7 @@ const showNotice = (text, temporary = false) => {
   clearTimeout(noticeTimer);
   note.textContent = text;
   panel.hidden = false;
-  if (temporary) noticeTimer = setTimeout(() => { panel.hidden = true; }, 4500);
+  if (temporary) noticeTimer = setTimeout(() => { panel.hidden = true; }, 5000);
 };
 const message = error => {
   const code = error?.code || '';

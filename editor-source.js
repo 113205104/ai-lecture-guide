@@ -1,6 +1,7 @@
 if(location.protocol==='file:'||window.guideCloud){
  if(location.protocol==='file:')document.title='講座互動指南｜本機同步版';
  let draft=structuredClone(window.guideData),target=null,editing=false;
+ const sectionModel=window.GuideSections;
  const draftKey=window.guideBackupKey||'lecture-guide-draft-v1';
  const syncKey='lecture-guide-sync-state-v1';
  let syncState;
@@ -29,6 +30,13 @@ if(location.protocol==='file:'||window.guideCloud){
  const editor=document.createElement('dialog');editor.id='editor';editor.setAttribute('aria-label','編輯項目');
  document.body.prepend(gear,menu,editor);
  const saveNotice=document.createElement('p');saveNotice.id='guide-save-notice';saveNotice.setAttribute('role','status');saveNotice.hidden=true;document.body.append(saveNotice);
+ let noticeTimer;
+ new MutationObserver(()=>{
+  clearTimeout(noticeTimer);
+  if(saveNotice.hidden||saveNotice.querySelector('button'))return;
+  if(/正在|請在更新頁|首次|未完成|失敗|無法|未收到|未確認|逾時|超過|內容不同|目前離線/.test(saveNotice.textContent))return;
+  noticeTimer=setTimeout(()=>{saveNotice.hidden=true;},5000);
+ }).observe(saveNotice,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['hidden']});
  const downloadGuide=(data,name='index.html')=>{
   const json=JSON.stringify(data).replace(/</g,'\\u003c');
   const html=publicTemplate.replace('<!--CONFIG-->',()=>'<script>window.guideConfig='+json+';</scr'+'ipt>');
@@ -138,7 +146,7 @@ if(location.protocol==='file:'||window.guideCloud){
   const section=e.target.closest('.guide-section-heading');
   if(section){
    e.preventDefault();e.stopPropagation();
-   target={kind:'section',group,page,index:Number(section.dataset.section)};
+   target={kind:'section',group,page,index:Number(section.dataset.section),sectionId:section.dataset.sectionId};
    openEditor();
    return;
   }
@@ -199,17 +207,11 @@ if(location.protocol==='file:'||window.guideCloud){
     do{copy[0]=list[index][0]+'（副本 '+suffix+++'）';}
     while(list.some(other=>other[0]===copy[0]));
     draft.toolCategories[copy[0]]=[...(draft.toolCategories[list[index][0]]||[])];
+    list.splice(index+1,0,copy);
    }else{
-    const root=document.querySelector('.lecture-mock');
-    const page=draft.groups[root.dataset.group].pages[root.dataset.subpage];
-    for(const key of ['sectionTitles','sectionColumns']){
-     if(!page[key])continue;
-     page[key]=Object.fromEntries(Object.entries(page[key]).map(([start,value])=>[
-      Number(start)>index?Number(start)+1:start,value
-     ]));
-    }
+    const page=draft.groups.flatMap(group=>group.pages||[]).find(page=>page.items===list);
+    sectionModel.duplicate(page,index);
    }
-   list.splice(index+1,0,copy);
    showCardChange(list,index+1,index,'已複製卡片，副本放在原卡片後方。');
   });
   for(const [label,offset] of [['上移',-1],['下移',1]]){
@@ -322,22 +324,36 @@ if(location.protocol==='file:'||window.guideCloud){
   if(target?.kind==='section'){
    const page=draft.groups[target.group]?.pages?.[target.page];
    if(!page)return;
-   const index=target.index;
+   const selected=sectionModel.find(page,target.sectionId)||sectionModel.read(page).find(section=>section.start===target.index&&section.title!==null);
+   if(!selected)return;
+   target.sectionId=selected.id;target.index=selected.start;
+   const index=selected.start;
    const section=box(form,'分區設定');
-   const currentTitle=page.sectionTitles?.[index]??'';
-   field(section,'副標題',currentTitle,value=>{page.sectionTitles??={};page.sectionTitles[index]=value;});
+   const currentTitle=selected.title??'';
+   if(selected.title!==null)field(section,'副標題',currentTitle,value=>sectionModel.update(page,selected.id,{title:value}));
    const layouts=box(section,'卡片排版');
    for(let columns=1;columns<=4;columns++){
     const button=action(layouts,'每列 '+columns+' 張',()=>{
-     page.sectionColumns??={};
-     page.sectionColumns[target.index]=columns;
+     sectionModel.update(page,selected.id,{columns});
      renderEditor();
     });
-    button.setAttribute('aria-pressed',String((page.sectionColumns?.[target.index]??page.columns??1)===columns));
+    button.setAttribute('aria-pressed',String((selected.columns??page.columns??1)===columns));
    }
-   action(section,'刪除此副標題（保留卡片）',()=>{
-    delete page.sectionTitles[index];
-    if(page.sectionColumns)delete page.sectionColumns[index];
+   const cards=box(section,'此分區卡片');
+   if(!selected.count){const empty=document.createElement('p');empty.textContent='此分區目前沒有卡片。';cards.append(empty);}
+   for(let cardIndex=selected.start;cardIndex<selected.end;cardIndex++){
+    const row=document.createElement('div');
+    const label=document.createElement('span');label.innerHTML=clean(page.items[cardIndex][1]);row.append(label);cards.append(row);
+    const remove=action(row,'刪除卡片',()=>{sectionModel.remove(page,cardIndex);refresh();renderEditor();});
+    remove.setAttribute('aria-label','刪除卡片：'+label.textContent);
+   }
+   action(cards,'新增卡片',()=>{
+    const count=sectionModel.find(page,selected.id).count;
+    sectionModel.insert(page,selected.id,[String(count+1),'新任務','','說明','','操作與提示詞',[]]);
+    refresh();renderEditor();status.textContent='已新增至目前分區。';
+   });
+   if(selected.title!==null)action(section,'刪除此副標題（保留卡片）',()=>{
+    sectionModel.removeHeading(page,selected.id);
     target={kind:'page',group:target.group,page:target.page};
     refresh();renderEditor();
    });
@@ -404,7 +420,7 @@ if(location.protocol==='file:'||window.guideCloud){
    const headingPosition=document.createElement('select');
    headingPosition.setAttribute('aria-label','新增副標題的位置');
    for(let index=0;index<=page.items.length;index++){
-    if(Object.hasOwn(page.sectionTitles||{},index))continue;
+    if(sectionModel.read(page).some(section=>section.start===index&&section.title!==null))continue;
     const title=document.createElement('div');
     title.innerHTML=page.items[index]?.[1]||'';
     headingPosition.add(new Option(index===page.items.length?'所有卡片之後':'第 '+(index+1)+' 張卡片之前｜'+title.textContent,String(index)));
@@ -413,8 +429,8 @@ if(location.protocol==='file:'||window.guideCloud){
    action(headings,'新增副標題',()=>{
     if(headingPosition.value==='')return;
     const index=Number(headingPosition.value);
-    page.sectionTitles??={};page.sectionTitles[index]='新副標題';
-    target={kind:'section',group:i,page:pageIndex,index};
+    const sectionId=sectionModel.addHeading(page,index,'新副標題');
+    target={kind:'section',group:i,page:pageIndex,index,sectionId};
     refresh();renderEditor();
    }).disabled=headingPosition.options.length===0;
    const layouts=box(pageBox,'卡片排版');
@@ -455,12 +471,24 @@ if(location.protocol==='file:'||window.guideCloud){
     });
     action(item,'新增連結',()=>{card[6].push(['工具','']);renderEditor()});
     action(item,'刪除此卡片',()=>{
-     page.items.splice(j,1);
+     sectionModel.remove(page,j);
      target={kind:'page',group:i,page:pageIndex};
      refresh();renderEditor();
     });
    });
-   action(pageBox,'新增卡片',()=>{page.items.push([String(page.items.length+1),'新任務','','說明','','操作與提示詞',[]]);renderEditor()});
+   const scopes=sectionModel.read(page);
+   const current=target.kind==='card'?sectionModel.forCard(page,target.index):null;
+   const scopeSelect=document.createElement('select');scopeSelect.setAttribute('aria-label','新增卡片的分區');
+   if(scopes.length>1&&!current)scopeSelect.add(new Option('請選擇新增卡片的分區',''));
+   for(const scope of scopes){const name=document.createElement('span');name.innerHTML=clean(scope.title??'此頁卡片');scopeSelect.add(new Option(name.textContent,scope.id));}
+   if(current)scopeSelect.value=current.id;
+   if(scopes.length>1)pageBox.append(scopeSelect);
+   const add=action(pageBox,'新增卡片',()=>{
+    const id=scopeSelect.value||scopes[0].id,scope=sectionModel.find(page,id);
+    const index=sectionModel.insert(page,id,[String(scope.count+1),'新任務','','說明','','操作與提示詞',[]]);
+    target={kind:'card',group:i,page:pageIndex,index};refresh();renderEditor();status.textContent='已新增至選取的分區。';
+   });
+   add.disabled=!scopeSelect.value;scopeSelect.onchange=()=>{add.disabled=!scopeSelect.value;};
    });
   });
   if(target.kind!=='tool'&&!draft.groups[target.group]?.pages?.[target.page]?.catalog)return;

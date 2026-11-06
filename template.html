@@ -1,4 +1,84 @@
-<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>講座互動指南</title><style>body{margin:16px auto;max-width:1120px;padding:0 12px;font-family:system-ui}button,input,select{font:inherit}button{cursor:pointer} .viz-carousel section[hidden]{display:none}#gear{position:absolute;right:24px;top:12px;z-index:4}#editor{padding:16px;background:#eef5f3;color:#203c43}#editor fieldset{margin:12px 0;border:1px solid #acc6c0}#editor label{display:block;margin:8px 0}.field{background:white;border:1px solid #acc6c0;padding:8px;min-height:24px}#bar{position:sticky;top:0;background:#eef5f3;padding:8px;z-index:5;display:flex;gap:5px;flex-wrap:wrap}</style><!--CONFIG--><div class="viz-carousel" aria-label="互動指南樣式提案" data-previous-label="上一款" data-next-label="下一款">
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>講座互動指南</title><style>body{margin:16px auto;max-width:1120px;padding:0 12px;font-family:system-ui}button,input,select{font:inherit}button{cursor:pointer} .viz-carousel section[hidden]{display:none}#gear{position:absolute;right:24px;top:12px;z-index:4}#editor{padding:16px;background:#eef5f3;color:#203c43}#editor fieldset{margin:12px 0;border:1px solid #acc6c0}#editor label{display:block;margin:8px 0}.field{background:white;border:1px solid #acc6c0;padding:8px;min-height:24px}#bar{position:sticky;top:0;background:#eef5f3;padding:8px;z-index:5;display:flex;gap:5px;flex-wrap:wrap}</style><script>(function(root,factory){
+ if(typeof module==='object'&&module.exports)module.exports=factory();
+ else root.GuideSections=factory();
+})(globalThis,function(){
+ function read(page){
+  const length=page.items.length;
+  let list;
+  if(Array.isArray(page.sectionLayout)&&page.sectionLayout.length){
+   list=page.sectionLayout.map(entry=>({...entry}));
+  }else{
+   list=Object.entries(page.sectionTitles||{})
+    .map(([start,title])=>({id:'legacy-'+start,start:Number(start),title,columns:page.sectionColumns?.[start]}))
+    .filter(entry=>Number.isInteger(entry.start)&&entry.start>=0&&entry.start<=length)
+    .sort((a,b)=>a.start-b.start);
+  }
+  if(!list.length||list[0].start!==0)list.unshift({id:'page-start',start:0,title:null});
+  return list.map((entry,index)=>({...entry,end:list[index+1]?.start??length,count:(list[index+1]?.start??length)-entry.start}));
+ }
+ function ensure(page){
+  if(!Array.isArray(page.sectionLayout)||!page.sectionLayout.length)page.sectionLayout=read(page).map(({end,count,...entry})=>entry);
+  return page.sectionLayout;
+ }
+ function project(page){
+  page.sectionTitles={};page.sectionColumns={};
+  for(const entry of ensure(page))if(entry.title!==null){
+   page.sectionTitles[entry.start]=entry.title;
+   if(entry.columns!==undefined)page.sectionColumns[entry.start]=entry.columns;
+  }
+ }
+ function find(page,id){return read(page).find(entry=>entry.id===id);}
+ function forCard(page,index){
+  if(index<0||index>=page.items.length)return undefined;
+  return read(page).find(entry=>index>=entry.start&&index<entry.end);
+ }
+ function insert(page,id,card,position){
+  const list=ensure(page),section=find(page,id),sectionIndex=list.findIndex(entry=>entry.id===id);
+  if(!section||sectionIndex<0)throw new Error('分區已變更，請重新選取分區。');
+  const at=position??section.end;
+  if(!Number.isInteger(at)||at<section.start||at>section.end)throw new Error('新增位置不在選取的分區。');
+  page.items.splice(at,0,card);
+  for(let i=sectionIndex+1;i<list.length;i++)list[i].start++;
+  project(page);return at;
+ }
+ function remove(page,index){
+  const section=forCard(page,index);
+  if(!section)throw new Error('找不到要刪除的卡片。');
+  const list=ensure(page),sectionIndex=list.findIndex(entry=>entry.id===section.id);
+  const [card]=page.items.splice(index,1);
+  for(let i=sectionIndex+1;i<list.length;i++)list[i].start--;
+  project(page);return {sectionId:section.id,card};
+ }
+ function duplicate(page,index){
+  const section=forCard(page,index);
+  if(!section)throw new Error('找不到要複製的卡片。');
+  return insert(page,section.id,structuredClone(page.items[index]),index+1);
+ }
+ function update(page,id,changes){
+  const entry=ensure(page).find(item=>item.id===id);
+  if(!entry)throw new Error('找不到分區。');
+  Object.assign(entry,changes);
+  if(entry.title===null&&changes.columns!==undefined){page.columns=changes.columns;delete entry.columns;}
+  project(page);
+ }
+ function addHeading(page,start,title){
+  const list=ensure(page);
+  if(!Number.isInteger(start)||start<0||start>page.items.length)throw new Error('分區位置無效。');
+  let suffix=1;while(list.some(entry=>entry.id==='section-'+suffix))suffix++;
+  const entry={id:'section-'+suffix,start,title};
+  const next=list.findIndex(item=>item.start>start);
+  list.splice(next<0?list.length:next,0,entry);project(page);return entry.id;
+ }
+ function removeHeading(page,id){
+  const list=ensure(page),index=list.findIndex(entry=>entry.id===id);
+  if(index<0)return;
+  if(index===0){list[0].title=null;delete list[0].columns;}
+  else list.splice(index,1);
+  project(page);
+ }
+ return {read,find,forCard,insert,remove,duplicate,update,addHeading,removeHeading};
+});
+</script><!--CONFIG--><div class="viz-carousel" aria-label="互動指南樣式提案" data-previous-label="上一款" data-next-label="下一款">
   <section data-variant="卡片指南" aria-label="卡片指南樣式"><div id="guide-cards" class="lecture-mock" aria-label="卡片指南外觀"></div></section>
   
 </div>
@@ -153,9 +233,10 @@ function cardBody(card){
  return description+'<details><summary>展開操作／提示詞</summary><div class="lg-prompt">'+desktopNotes(card)+'</div></details>';
 }
 function desktopHeading(page,index){
- const title=page?.sectionTitles?.[index];
- if(title===undefined)return '';
- return '<div role="heading" aria-level="3" class="guide-section-heading" data-section="'+index+'"><span class="guide-section-title">'+title+'</span><button type="button" class="guide-section-edit">編輯分區</button></div>';
+ return window.GuideSections.read(page).filter(section=>section.start===index&&section.title!==null).map(section=>{
+  const id=String(section.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  return '<div role="heading" aria-level="3" class="guide-section-heading" data-section="'+index+'" data-section-id="'+id+'"><span class="guide-section-title">'+section.title+'</span><button type="button" class="guide-section-edit">編輯分區</button></div>';
+ }).join('');
 }
 function desktopNotes(card){
  const notes=card[5];
@@ -269,7 +350,7 @@ root.querySelectorAll('.lg-description,.lg-prompt').forEach(el=>{el.style.fontWe
  headings.forEach(heading=>{
   const section=document.createElement('div');
   section.className='guide-section-grid';
-  const columns=Number(page.sectionColumns?.[heading.dataset.section]??page.columns??1);
+  const columns=Number(window.GuideSections.find(page,heading.dataset.sectionId)?.columns??page.columns??1);
   section.style.setProperty('--guide-section-columns',String([1,2,3,4].includes(columns)?columns:1));
   heading.after(section);
   while(section.nextElementSibling?.matches('article'))section.append(section.nextElementSibling);
