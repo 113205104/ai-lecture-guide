@@ -1,3 +1,5 @@
+import {setupPublishBridge} from './publish-bridge.mjs';
+import {installGuideImport} from './guide-import.mjs';
 // Spark 免費方案：不使用付費 Cloud Functions、Storage 或簡訊登入。
 const panel = document.createElement('aside');
 panel.className = 'guide-cloud-status';
@@ -27,16 +29,33 @@ const message = error => {
   if (code.startsWith('auth/')) return 'Google 登入未完成，請檢查帳號、允許登入視窗及網路。';
   return error?.message || '網路連線失敗，請稍後再試。';
 };
+const withDeadline = async (operation, label) => {
+  let timer;
+  try { return await Promise.race([operation,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label+'超過 30 秒未回應，尚未更新線上內容。請重新開啟更新頁再試。')),30000);})]); }
+  finally { clearTimeout(timer); }
+};
+let bridgeState = 'loading';
+// 先接收本機訊息，再載入 Firebase；不能讓登入元件或資料庫讀取卡住握手。
+const bridge = setupPublishBridge({
+  getState:()=>bridgeState,
+  login:()=>login.click(),
+  save:(data,options)=>window.guideCloud.save(data,options),
+  getCurrent:()=>window.guideCloud.current()
+});
 try {
-  const response = await fetch('./firebase-config.json', { cache: 'no-store' });
-  if (!response.ok) throw new Error('無法讀取網站設定。');
-  const config = await response.json();
+  const configOperation=fetch('./firebase-config.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('無法讀取網站設定。');return response.json();});
+  const [config,appModule,authModule,firestoreModule]=await withDeadline(Promise.all([
+    configOperation,
+    import('https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js'),
+    import('https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js'),
+    import('https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js')
+  ]),'載入網站設定與登入元件');
   if (!config.apiKey || !config.projectId || !config.ownerEmail) {
     throw new Error('這是網站準備版，尚未完成免費雲端設定。目前顯示檔案內的講義，還不能跨裝置儲存。');
   }
-  const { initializeApp } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js');
-  const { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js');
-  const { getFirestore, doc, getDocFromServer, runTransaction, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js');
+  const {initializeApp}=appModule;
+  const {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut}=authModule;
+  const {getFirestore,doc,getDocFromServer,runTransaction,serverTimestamp}=firestoreModule;
   const app = initializeApp(config);
   const auth = getAuth(app);
   const isOwner = user => Boolean(user && user.emailVerified && user.email === config.ownerEmail
@@ -54,7 +73,7 @@ try {
     window.guideData = data;
     window.refreshGuide(data, data.position);
   };
-  apply(await getDocFromServer(ref));
+  apply(await withDeadline(getDocFromServer(ref),'讀取雲端講義'));
   note.textContent = '已讀取雲端講義。';
   login.hidden = false;
   login.onclick = async () => {
@@ -69,22 +88,16 @@ try {
       }
     } catch (error) { showNotice(message(error)); }
   };
-  const {setupPublishBridge} = await import('./publish-bridge.mjs');
-  const bridge = setupPublishBridge({
-    getState: () => !auth.currentUser ? 'signed-out' : isOwner(auth.currentUser) && window.guideCloud ? 'owner' : 'other',
-    login: () => login.click(),
-    save: (data, options) => window.guideCloud.save(data, options),
-    getCurrent: () => ({revision, data:structuredClone(window.guideData)})
-  });
   onAuthStateChanged(auth, async user => {
     login.textContent = user ? '登出' : '⚙';
     login.setAttribute('aria-label', user ? '登出' : '講者登入');
-    if (!user) { bridge.refresh(); return; }
-    if (!isOwner(user)) { showNotice('目前帳號可閱讀，沒有講者編輯權限。'); bridge.refresh(); return; }
+    if (!user) { bridgeState='signed-out'; bridge.refresh(); return; }
+    if (!isOwner(user)) { bridgeState='other'; showNotice('目前帳號可閱讀，沒有講者編輯權限。'); bridge.refresh(); return; }
     try {
       // 登入後再次拿最新版，儲存以版本號檢查其他裝置的修改。
-      apply(await getDocFromServer(ref));
+      apply(await withDeadline(getDocFromServer(ref),'確認講者的雲端版本'));
       window.guideCloud = {
+        current:()=>({revision,data:structuredClone(window.guideData)}),
         async save(data, options = {}) {
           if (!isOwner(auth.currentUser)) throw new Error('請先登入講者帳號。');
           const payload = JSON.stringify(data);
@@ -108,15 +121,15 @@ try {
       };
       if (!editorLoaded) {
         const script = document.createElement('script'); script.src = './editor.js';
-        await new Promise((resolve, reject) => { script.onload = resolve; script.onerror = () => reject(new Error('編輯器載入失敗，請重新整理。')); document.body.append(script); });
+        await withDeadline(new Promise((resolve, reject) => { script.onload = resolve; script.onerror = () => reject(new Error('編輯器載入失敗，請重新整理。')); document.body.append(script); }),'載入講義編輯器');
         editorLoaded = true;
       }
       login.classList.remove('guide-cloud-login');
       document.getElementById('guide-menu').append(login);
-      const {installGuideImport} = await import('./guide-import.mjs');
       installGuideImport({menu:document.getElementById('guide-menu'),save:data => window.guideCloud.save(data)});
       panel.hidden = true;
+      bridgeState='owner';
       bridge.refresh();
-    } catch (error) { showNotice(message(error)); }
+    } catch (error) { bridgeState='error';showNotice(message(error));bridge.fail(message(error)); }
   });
-} catch (error) { showNotice(message(error)); }
+} catch (error) { bridgeState='error';showNotice(message(error));bridge.fail(message(error)); }

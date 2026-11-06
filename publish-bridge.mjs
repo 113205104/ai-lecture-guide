@@ -2,7 +2,7 @@ import {validateGuide} from './guide-data.mjs';
 // 本機檔案不持有 Firebase 登入憑證；由 HTTPS 更新頁核對講者身分並儲存。
 // 除了 opener 與隨機通道，還需每個瀏覽器首次由講者明確核准的配對密鑰。
 export function setupPublishBridge({getState, login, save, getCurrent}) {
-  if (!new URLSearchParams(location.search).has('update')) return {refresh() {}};
+  if (!new URLSearchParams(location.search).has('update')) return {refresh() {},fail() {}};
   const channel = new URLSearchParams(location.hash.slice(1)).get('channel');
   const source = window.opener;
   const dialog = document.createElement('dialog'); dialog.className = 'guide-transfer-dialog';
@@ -14,16 +14,17 @@ export function setupPublishBridge({getState, login, save, getCurrent}) {
   const view = document.createElement('button'); view.textContent = '開啟線上講義'; view.hidden = true; view.onclick = () => location.replace(location.pathname);
   dialog.append(title,text,signIn,allow,replace,view); document.body.append(dialog); dialog.showModal();
   dialog.addEventListener('cancel', event => event.preventDefault());
-  if (!source || !channel || !/^[a-f0-9-]{20,100}$/i.test(channel)) { text.textContent = '請從本機講義按「匯出」，再由開啟的更新頁繼續。'; view.hidden = false; return {refresh() {}}; }
+  if (!source || !channel || !/^[a-f0-9-]{20,100}$/i.test(channel)) { text.textContent = '請從本機同步版按「匯出並更新線上」，再由開啟的更新頁繼續。'; view.hidden = false; return {refresh() {},fail() {}}; }
   const storeKey = 'lecture-guide-publish-pairs-v1';
   let data, credentials, baseRevision, overwriteConfirmed = false, busy = false, complete = false;
-  const send = message => source.postMessage({type:'guide-sync',channel,...message}, '*');
+  const send = message => {try{source.postMessage({type:'guide-sync',channel,...message},'*');}catch{}};
   const readPairs = () => { try { return JSON.parse(localStorage.getItem(storeKey)) || {}; } catch { return {}; } };
   const paired = () => credentials?.id && credentials?.secret && readPairs()[credentials.id] === credentials.secret;
   const refresh = async () => {
     if (!data || busy || complete) return;
     const state = getState();
     signIn.hidden = state === 'owner'; allow.hidden = true; replace.hidden = true;
+    if(state==='loading'){signIn.hidden=true;text.textContent='已接收本機講義，正在載入登入與雲端版本。';return;}
     if (state !== 'owner') { text.textContent = state === 'signed-out' ? '請登入講者 Google 帳號。登入後即可繼續更新。' : '目前帳號沒有編輯權限，請切換為講者帳號。'; return; }
     if (!paired()) {
       text.textContent = '首次使用：允許目前開啟本頁的本機講義編輯器，在你保持登入時自動更新這份講義。其他編輯器仍需另行確認。';
@@ -40,6 +41,7 @@ export function setupPublishBridge({getState, login, save, getCurrent}) {
       send({action:'complete', revision:result.revision});
     } catch (error) { text.textContent = '更新未完成：'+error.message+' 本機 HTML 備份仍然保留。'; send({action:'error',message:error.message}); }
   };
+  const fail = message => {complete=true;allow.hidden=true;replace.hidden=true;signIn.hidden=true;text.textContent=message;view.hidden=false;send({action:'error',message});};
   allow.onclick = () => {
     if (getState() !== 'owner') return;
     try {
@@ -63,5 +65,5 @@ export function setupPublishBridge({getState, login, save, getCurrent}) {
     catch (error) { text.textContent = error.message; send({action:'error',message:error.message}); }
   });
   send({action:'ready'});
-  return {refresh};
+  return {refresh,fail};
 }

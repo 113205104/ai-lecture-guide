@@ -1,9 +1,11 @@
 if(location.protocol==='file:'||window.guideCloud){
+ if(location.protocol==='file:')document.title='講座互動指南｜本機同步版';
  let draft=structuredClone(window.guideData),target=null,editing=false;
  const draftKey=window.guideBackupKey||'lecture-guide-draft-v1';
  const syncKey='lecture-guide-sync-state-v1';
  let syncState;
  try{syncState=JSON.parse(localStorage.getItem(syncKey));}catch{}
+ syncState??=window.guideSyncSeed;
  const fingerprint=data=>{
   const {position,...content}=data;
   return JSON.stringify(content,(_key,value)=>value&&typeof value==='object'&&!Array.isArray(value)
@@ -622,22 +624,29 @@ if(location.protocol==='file:'||window.guideCloud){
  let pendingPublish;
  const publishOnline=guide=>{
   pendingPublish?.cancel();
-  const channel=crypto.randomUUID();
+  const channel=crypto.randomUUID?.()||Array.from(crypto.getRandomValues(new Uint8Array(16)),value=>value.toString(16).padStart(2,'0')).join('');
   const destination='https://113205104.github.io/ai-lecture-guide/';
   const origin=new URL(destination).origin;
-  const popup=window.open(destination+'?update=1#channel='+channel,'_blank');
+  // 必須在使用者點擊時先開視窗，再下載；先安裝訊息監聽，再導向更新頁。
+  const popup=window.open('about:blank','_blank');
   saveNotice.hidden=false;
-  if(!popup){saveNotice.textContent='HTML 備份已下載，但更新視窗未能開啟。請允許此頁開啟彈出視窗，再按「匯出」。';return;}
+  if(!popup){saveNotice.textContent='HTML 備份會照常下載，但瀏覽器阻擋了更新視窗。請允許此頁開啟彈出視窗，再按「匯出並更新線上」。';return;}
   const credentialKey='lecture-guide-online-pair-v1';
   let credentials;
   try{credentials=JSON.parse(localStorage.getItem(credentialKey));}catch{}
   const snapshot=structuredClone(guide);
-  saveNotice.textContent='HTML 備份已下載。正在開啟更新頁；首次使用請在更新頁登入並允許連結。';
-  const cleanup=()=>{window.removeEventListener('message',receive);clearTimeout(timer);pendingPublish=null;};
+  saveNotice.textContent='正在開啟更新頁。HTML 備份會同時下載；請在更新頁完成首次連結。';
+  let readyTimer,completionTimer,ready=false;
+  const cleanup=()=>{window.removeEventListener('message',receive);clearTimeout(readyTimer);clearTimeout(completionTimer);pendingPublish=null;};
   const receive=event=>{
    if(event.source!==popup||event.origin!==origin||event.data?.type!=='guide-sync'||event.data.channel!==channel)return;
    const message=event.data;
-   if(message.action==='ready')popup.postMessage({type:'guide-sync',action:'publish',channel,guide:snapshot,credentials,baseRevision:Number.isInteger(syncState?.revision)?syncState.revision:null},origin);
+   if(message.action==='ready'&&!ready){
+    ready=true;clearTimeout(readyTimer);
+    saveNotice.textContent='更新頁已開啟，正在傳送講義。首次使用請在更新頁登入並允許連結。';
+    popup.postMessage({type:'guide-sync',action:'publish',channel,guide:snapshot,credentials,baseRevision:Number.isInteger(syncState?.revision)?syncState.revision:null},origin);
+    completionTimer=setTimeout(()=>{saveNotice.textContent='備份已下載，但尚未收到線上更新確認。請查看更新頁是否仍在等待登入或版本選擇。';cleanup();},300000);
+   }
    if(message.action==='paired'){
     credentials=message.credentials;
     try{localStorage.setItem(credentialKey,JSON.stringify(credentials));}catch{}
@@ -646,13 +655,16 @@ if(location.protocol==='file:'||window.guideCloud){
    if(message.action==='error'){saveNotice.textContent='HTML 備份已下載，線上更新未完成：'+message.message;cleanup();}
   };
   window.addEventListener('message',receive);
-  const timer=setTimeout(()=>{saveNotice.textContent='HTML 備份已下載，但尚未收到線上更新完成的訊息。請查看更新頁；不要把本機備份視為已同步。';cleanup();},600000);
+  readyTimer=setTimeout(()=>{saveNotice.textContent='30 秒內未收到更新頁回應。HTML 備份仍保留，線上尚未確認更新。請確認新分頁是否載入，或是否仍在使用舊版匯出功能。';cleanup();},30000);
   pendingPublish={cleanup,cancel:()=>{popup.postMessage({type:'guide-sync',action:'cancel',channel},origin);popup.close();cleanup();}};
+  popup.location.replace(destination+'?update=1&request='+channel+'#channel='+channel);
  };
- action(menu,'匯出',()=>{
+ const exportLabel=location.protocol==='file:'?'匯出並更新線上':'下載 HTML 備份';
+ action(menu,exportLabel,()=>{
   closeMenu();
-  downloadGuide(draft);
-  if(location.protocol==='file:')publishOnline(draft);
+  try{if(location.protocol==='file:')publishOnline(draft);}
+  catch(error){saveNotice.textContent='無法開啟線上更新：'+error.message+'。HTML 備份仍會下載。';saveNotice.hidden=false;}
+  finally{downloadGuide(draft);}
  });
  renderEditor();
  if(location.protocol==='file:'){
