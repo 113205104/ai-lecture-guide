@@ -1,7 +1,7 @@
 /* 同一個電腦版畫布；手機與平板透過橫向捲動查看，不改排欄數。 */
 html { overflow-x: auto; }
-body { width: 1120px; min-width: 1120px; max-width: 1120px; }
-.lecture-mock { padding: 24px; }
+body { width: auto; min-width: 1120px; max-width: none; margin: 0; }
+.lecture-mock { padding: clamp(18px, 3vw, 48px); max-width: 1600px; margin-inline: auto; }
 .lecture-mock h2 { font-size: var(--guide-main-size, 30px); }
 .lecture-mock nav .lg-tab,
 .lecture-mock nav .lg-tab[aria-selected="true"] { font-size: 16px; padding: 16px 6px; }
@@ -29,3 +29,17 @@ body { width: 1120px; min-width: 1120px; max-width: 1120px; }
 #editor .field { min-inline-size: 0; box-sizing: border-box; overflow-wrap: anywhere; }
 #editor select,
 #editor input { max-inline-size: 100%; box-sizing: border-box; }
+
+.guide-cloud-login {
+  position: fixed; right: 18px; top: 18px; z-index: 20;
+  height: 46px; min-width: 46px; padding: 0 12px; border: 1px solid #a9c4c5;
+  border-radius: 999px; background: #183c43; color: white; font-size: 18px;
+}
+.guide-cloud-status {
+  position: fixed; left: 16px; bottom: 16px; z-index: 30;
+  max-width: min(420px, calc(100vw - 56px)); padding: 12px 16px;
+  border: 1px solid #acc6c0; border-radius: 12px; background: #fffdf7;
+  color: #203c43; box-shadow: 0 4px 16px #183c4320; font: 14px/1.5 system-ui;
+}
+.guide-cloud-status[hidden] { display: none; }
+.guide-cloud-status p { margin: 0; }
