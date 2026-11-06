@@ -1,0 +1,1084 @@
+{
+  "groups": [
+    {
+      "name": "基本功",
+      "subtitle": "先把需求說清楚，再讓 AI 接手",
+      "items": [
+        [
+          "01",
+          "把發散想法整理成任務規格",
+          "GPT 網頁版",
+          "將目標、使用條件、材料與限制，整理成能執行、能檢查的任務。",
+          "https://chatgpt.com/",
+          "以下是我的想法：……\n請整理目標、使用對象、使用條件、輸入材料、執行順序及驗收標準。分開列出已確認需求、建議與待確認事項。",
+          [
+            [
+              "GPT",
+              "https://chatgpt.com/"
+            ]
+          ]
+        ],
+        [
+          "02",
+          "準備反覆使用的長文件",
+          "Markdown · 文件整理",
+          "針對網頁版反覆使用的長文件，展示轉檔、章節整理與內容抽查。",
+          "https://github.com/microsoft/markitdown",
+          "請依章節整理這份文件，保留來源資訊與圖表編號。資訊缺漏或擷取異常的地方請標記。",
+          [
+            [
+              "MarkItDown",
+              "https://github.com/microsoft/markitdown"
+            ],
+            [
+              "Docling",
+              "https://github.com/docling-project/docling"
+            ]
+          ]
+        ],
+        [
+          "03",
+          "追問與檢查成果",
+          "GPT 網頁版",
+          "展示同一項需求如何逐輪修正，逐項對照任務規格。",
+          "https://chatgpt.com/",
+          "請對照任務規格檢查這份成果，指出未完成項目、未經確認的假設及需要我判斷的事項。",
+          [
+            [
+              "GPT",
+              "https://chatgpt.com/"
+            ]
+          ]
+        ]
+      ],
+      "pages": [
+        {
+          "name": "從 AI 問答到 AI 工作流",
+          "columns": 2,
+          "items": [
+            [
+              "01",
+              "傳統 AI 問答",
+              "",
+              "向 ChatGPT 詢問問題、摘要文章、修改文字、產生程式碼或推薦工具。接著由你自行安裝套件、執行程式與處理錯誤。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "02",
+              "AI Agent",
+              "",
+              "你交辦：「把這個資料夾內的 PDF 全部轉換成 Markdown。」<br><br>檢查檔案<br>↓<br>選擇適合的轉換工具<br>↓<br>執行程式<br>↓<br>檢查轉換結果<br>↓<br>整理輸出檔案",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "01",
+              "用人、事、時、地、物、法交代需求",
+              "",
+              "說清楚使用者、要做的事、時間、情境、材料與處理方式。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "01",
+              "把發散的想法整理成任務<br>",
+              "GPT 網頁版",
+              "<b><font style=\"font-size: 18px;\">人+事+(時、地)+物提問法</font><br></b>將目標、使用條件、材料與限制，整理成能執行、能檢查的任務<br><br>",
+              "https://chatgpt.com/",
+              "以下是我的想法：……\n請整理目標、使用對象、使用條件、輸入材料、執行順序及驗收標準。分開列出已確認需求、建議與待確認事項。",
+              []
+            ],
+            [
+              "02",
+              "將反覆使用的長文件轉Markdown檔",
+              "Markdown · 文件整理",
+              "<font style=\"color: rgb(5, 5, 5);\">針對網頁版中，需反覆使用之長文件，</font><font style=\"color: rgb(233, 9, 9);\"><b>桌面版不需要</b></font>",
+              "https://github.com/microsoft/markitdown",
+              "請依章節整理這份文件，保留來源資訊與圖表編號。資訊缺漏或擷取異常的地方請標記。",
+              [
+                [
+                  "MarkItDown",
+                  "https://github.com/microsoft/markitdown"
+                ],
+                [
+                  "Docling",
+                  "https://github.com/docling-project/docling"
+                ]
+              ]
+            ]
+          ],
+          "sectionTitles": {
+            "0": "傳統問答 vs AI Agent",
+            "2": "提問與反覆使用的長文件"
+          }
+        },
+        {
+          "name": "認識 AI 工具的基本語言",
+          "columns": 2,
+          "items": [
+            [
+              "01",
+              "MCP",
+              "",
+              "讓 AI 應用程式透過共同的協定連接外部工具與資料。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "02",
+              "CLI",
+              "",
+              "在終端機輸入指令來操作工具，例如用 gh 操作 GitHub。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "03",
+              "API",
+              "",
+              "讓程式依約定的介面向另一項服務傳送請求並取得結果。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "04",
+              "uv",
+              "",
+              "用來管理 Python 環境、套件與執行指令的工具。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "05",
+              "從任務選擇工具",
+              "",
+              "<strong>先確認要做的事</strong><br>↓<br>在終端機操作 → CLI<br>在程式內呼叫服務 → API<br>讓 AI 接上工具與資料 → MCP<br>↓<br>若要準備 Python 環境或套件 → uv",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "01",
+              "Git｜保存修改紀錄",
+              "",
+              "想留底、看改了哪裡，再用 Git。",
+              "",
+              "請執行 git --version。找不到時先查安裝位置與 PATH，確定未安裝才用 WinGet 的 Git.Git 或 Git 官方安裝程式，最後回報版本。",
+              []
+            ],
+            [
+              "02",
+              "PowerShell｜執行腳本",
+              "",
+              "先沿用能跑示範的版本。腳本要求 PowerShell 7 時，再檢查 pwsh。",
+              "",
+              "請確認目前使用的 PowerShell 版本。若腳本需要 PowerShell 7，先試 pwsh --version，缺少才用 WinGet 的 Microsoft.PowerShell 或微軟官方安裝程式。保留 5.1，最後驗證版本。",
+              []
+            ],
+            [
+              "03",
+              "GitHub CLI｜用帳號辦事",
+              "",
+              "看公開專案可以貼網址。要透過 gh 替你在 GitHub 提問或送審，再準備工具與登入。",
+              "",
+              "先檢查 gh --version 和 gh auth status。缺少工具才用 WinGet 的 GitHub.cli 或官方來源安裝。需要授權時用 gh auth login --hostname github.com --web，逐步告訴我怎麼在瀏覽器完成，最後回報帳號，不顯示權杖。",
+              []
+            ]
+          ],
+          "sectionTitles": {
+            "0": "四個基本名詞",
+            "4": "工具選擇流程",
+            "5": "事前準備｜確認桌面工具"
+          }
+        },
+        {
+          "name": "建立 AI 小隊與善用工具資源",
+          "columns": 1,
+          "items": [
+            [
+              "04",
+              "研究小隊｜資料夾放什麼",
+              "",
+              "規則、角色、材料、交辦與成品各有位置。",
+              "",
+              "<b>規則與角色</b><br>README.md：範本說明（給人看的）<br>AGENTS.md：制定公約 （給AI看的）<br>CLAUDE.md：用 @AGENTS.md 指向同一份公約<br>team.md：小隊模式<br>roles/：領隊與隊員設定<br><br><b><font style=\"font-size: 18px;\">原始材料</font></b><br>material/：給AI的研究材料<br><br><b>交辦與成果</b><br>workspace/inbox/：交辦單<br>workspace/outbox/：成品與修改的各版本<br>workspace/log.md：進度與驗收紀錄<br>.gitignore：列出不納入 Git 的檔案",
+              []
+            ],
+            [
+              "05",
+              "換電腦｜先拉再推",
+              "",
+              "<img src=\"data:image/webp;base64,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\" alt=\"講義圖片\" style=\"max-width: 100%; height: auto; width: 75%;\"><br>開工拿最新版，收工前看改動，確認後再送出",
+              "",
+              "<b>開工：</b>先檢查未提交的改動。工作區乾淨時執行 git pull，告訴我更新了什麼。若有衝突，先說明。<div><b>收工：</b>列出修改檔案，特別標出原始材料。等我確認可上傳的範圍，再提交。</div>",
+              []
+            ],
+            [
+              "03",
+              "腳本與開源工具",
+              "GitHub · VS Code · 程式代理",
+              "從網頁版任務規格接續執行腳本，尋找模型專案，並核對程式結果。",
+              "https://github.com/",
+              "操作順序：GPT 網頁版整理任務規格 → GitHub 找工具與模型專案 → 檢查 README、授權、環境與模型權重 → 交給 VS Code 中的程式代理或 CLI 實作 → 用小資料驗證結果。\nSkills 作為重用工作流程的延伸介紹。\n\n提示詞：請根據這份規格列出輸入、處理步驟、輸出格式與驗收方法，再撰寫腳本。先用我能人工核對的小範例執行，說明缺失值、單位與錯誤如何處理。",
+              [
+                [
+                  "GitHub",
+                  "https://github.com/"
+                ],
+                [
+                  "Hugging Face",
+                  "https://huggingface.co/"
+                ],
+                [
+                  "VS Code",
+                  "https://code.visualstudio.com/"
+                ],
+                [
+                  "Codex",
+                  "https://developers.openai.com/codex/"
+                ],
+                [
+                  "Claude Code",
+                  "https://code.claude.com/docs/"
+                ]
+              ]
+            ],
+            [
+              "06",
+              "手機遠端操作",
+              "",
+              "手機可作為遠端入口，依已設定的功能查看進度或交辦任務。",
+              "",
+              "查看Codex進度<p><strong>第一次先配對。</strong> 更新 Windows 上的 ChatGPT 桌面 App 和手機上的 ChatGPT App。在電腦開啟 <strong>Settings → Connections → Control this Mac or PC → Set up／Add</strong>。用手機掃描電腦顯示的 QR code，在 ChatGPT 裡確認兩端使用<strong>同一個帳號和工作區</strong>，再完成配對。 <a href=\"https://learn.chatgpt.com/docs/remote-connections\" target=\"_blank\" rel=\"noopener noreferrer\">OpenAI 遠端連線設定</a></p><p>配對後，在手機 ChatGPT App 開啟 <strong>Codex</strong>（有些版本顯示 <strong>Remote</strong>），選擇這台 Windows 電腦，再打開<strong>原本的對話</strong>。你可以看執行進度、輸出和檔案變更，也能補充指示，或在出現核准要求時查看細節再決定。想確認這個 AI-workshop 專案的工作，就從這台主機打開該專案的對話。 <a href=\"https://learn.chatgpt.com/docs/mobile\" target=\"_blank\" rel=\"noopener noreferrer\">OpenAI 手機版 Codex 指南</a></p>3. 從手機交辦任務給電腦上的 Codex<p>在手機的 <strong>Codex／Remote</strong> 選擇 <strong>Windows 主機 → AI-workshop 專案</strong>，開新對話後直接輸入任務。如果是接續正在做的事，就在原對話追加指示。要讀取這台電腦的本機檔案時，請選這台 Windows 主機。 <a href=\"https://learn.chatgpt.com/docs/mobile\" target=\"_blank\" rel=\"noopener noreferrer\">OpenAI 手機版 Codex 指南</a></p><p>可以先用這個任務測試連線：</p>請讀取 AI-workshop 專案，告訴我這個專案的用途、主要檔案，以及如何在 Windows 上執行。先只檢查並回報。<p>如果要讓 <strong>Codex 代你點選 Windows 應用程式</strong>，先在電腦端的 <strong>Plugins → Computer Use</strong> 安裝並啟用，再從手機交辦，例如「使用 @Computer 開啟記事本，輸入『手機遠端測試』，停在畫面上讓我確認」。</p>",
+              [],
+              false
+            ]
+          ],
+          "sectionTitles": {
+            "0": "建立研究助理｜分工與接續",
+            "3": "補充"
+          }
+        }
+      ],
+      "desktopSeeded": true,
+      "desktopSupplementV2": true
+    },
+    {
+      "name": "AI 工具與網站",
+      "subtitle": "從講義、報告到考前練習，帶走可以直接使用的方法。",
+      "items": [
+        [
+          "01",
+          "建議書生成簡報",
+          "GPT → Gamma",
+          "先確認報告主線，再將建議書與大綱轉成簡報初稿。",
+          "https://gamma.app/",
+          "請將這份建議書整理成 8 張投影片的大綱，每張只保留一個主要訊息，並標示需要補充的證據。",
+          [
+            [
+              "GPT",
+              "https://chatgpt.com/"
+            ],
+            [
+              "Gamma",
+              "https://gamma.app/"
+            ]
+          ]
+        ],
+        [
+          "02",
+          "筆記整理與考前模擬題",
+          "NotebookLM · GPT · Anki",
+          "以講義整理重點、回查來源，並根據課程內容模擬出題。",
+          "https://notebooklm.google.com/",
+          "筆記整理：提供講義與自己的筆記，整理章節重點、概念比較表與不理解的問題，回查來源。\n考前模擬：依課程目標、講義與歷屆試題產生練習題，作答後整理弱點；Anki 作為小卡與長期複習補充。\n\n提示詞：請根據講義整理概念比較表，再一次出一題考前練習。等我回答後再解釋並指出需要複習的內容。",
+          [
+            [
+              "NotebookLM",
+              "https://notebooklm.google.com/"
+            ],
+            [
+              "ChatGPT",
+              "https://chatgpt.com/"
+            ],
+            [
+              "Anki",
+              "https://apps.ankiweb.net/"
+            ]
+          ]
+        ],
+        [
+          "03",
+          "專題找文獻：從關鍵字開始",
+          "GPT → 文獻搜尋 → Litmaps",
+          "從中文想法拆出英文概念與搜尋式，找到種子文獻後延伸探索，銜接研究單元。",
+          "https://chatgpt.com/",
+          "我的專題是……。請列出中英文關鍵字、同義詞與三組由廣到窄的搜尋式，先不要列文獻。\n接著到適合學科的資料庫搜尋，選一篇相關文獻，再以 Litmaps 延伸探索。",
+          [
+            [
+              "GPT",
+              "https://chatgpt.com/"
+            ],
+            [
+              "Litmaps",
+              "https://www.litmaps.com/"
+            ]
+          ]
+        ]
+      ],
+      "pages": [
+        {
+          "name": "課業學習",
+          "columns": 3,
+          "items": [
+            [
+              "簡報製作",
+              "Gamma",
+              "",
+              "將確認過的建議書與大綱轉成簡報初稿。",
+              "",
+              "把結構化內容或 Markdown 檔轉成簡報初稿。",
+              [
+                [
+                  "Gamma",
+                  "https://gamma.app/"
+                ]
+              ],
+              false
+            ],
+            [
+              "學習與閱讀",
+              "NotebookLM",
+              "",
+              "整理一組來源、筆記、文獻比較與模擬測驗。",
+              "",
+              "可從講義與筆記整理重點、心智圖與練習題。",
+              [
+                [
+                  "NotebookLM",
+                  "https://notebooklm.google.com/"
+                ]
+              ],
+              false
+            ],
+            [
+              "學習與複習",
+              "Anki",
+              "",
+              "製作小卡並安排長期複習。",
+              "",
+              "把需要反覆複習的重點與題目做成小卡。",
+              [
+                [
+                  "Anki",
+                  "https://apps.ankiweb.net/"
+                ]
+              ],
+              false
+            ],
+            [
+              "01",
+              "建議書生成簡報",
+              "GPT → Gamma",
+              "先確認報告主線，再將建議書與大綱轉成簡報初稿。",
+              "https://gamma.app/",
+              "請將這份建議書整理成 8 張投影片的大綱，每張只保留一個主要訊息，並標示需要補充的證據。",
+              [
+                [
+                  "GPT",
+                  "https://chatgpt.com/"
+                ],
+                [
+                  "Gamma",
+                  "https://gamma.app/"
+                ]
+              ]
+            ],
+            [
+              "02",
+              "筆記整理與考前模擬題",
+              "NotebookLM · GPT · Anki",
+              "以講義整理重點、回查來源，並根據課程內容模擬出題。",
+              "https://notebooklm.google.com/",
+              "筆記整理：提供講義與自己的筆記，整理章節重點、概念比較表與不理解的問題，回查來源。\n考前模擬：依課程目標、講義與歷屆試題產生練習題，作答後整理弱點；Anki 作為小卡與長期複習補充。\n\n提示詞：請根據講義整理概念比較表，再一次出一題考前練習。等我回答後再解釋並指出需要複習的內容。",
+              [
+                [
+                  "NotebookLM",
+                  "https://notebooklm.google.com/"
+                ],
+                [
+                  "ChatGPT",
+                  "https://chatgpt.com/"
+                ],
+                [
+                  "Anki",
+                  "https://apps.ankiweb.net/"
+                ]
+              ]
+            ]
+          ],
+          "sectionTitles": {
+            "0": "工具卡片",
+            "3": "原有操作範例"
+          }
+        },
+        {
+          "name": "專題、論文與研究",
+          "columns": 2,
+          "items": [
+            [
+              "多模型比較",
+              "ChatHub",
+              "",
+              "並排比較不同 AI 模型的回覆。",
+              "",
+              "把同一份研究構想交給不同模型，對照問題拆解、研究範圍與可行性。",
+              [
+                [
+                  "ChatHub",
+                  "https://chathub.gg/"
+                ]
+              ],
+              false
+            ],
+            [
+              "01",
+              "研究定題與搜尋",
+              "GPT／Claude · Elicit",
+              "梳理研究想法、研究價值與現有困境，產生關鍵字並檢視研究設計。",
+              "https://chatgpt.com/",
+              "操作順序：研究想法 → 核心問題與可行性 → 中英文關鍵字與搜尋式 → 近期文獻 → 現有困境、研究缺口與價值 → 研究設計批判。\n\n提示詞：我的研究構想是……。請先拆解研究問題、對象與變項，列出關鍵字與搜尋式。根據我提供的文獻，整理目前限制、可驗證的研究方向、混淆變項與替代解釋。區分有來源支持的判斷與仍待查證的想法。",
+              [
+                [
+                  "ChatGPT",
+                  "https://chatgpt.com/"
+                ],
+                [
+                  "Claude",
+                  "https://claude.ai/"
+                ],
+                [
+                  "Elicit",
+                  "https://elicit.com/"
+                ]
+              ]
+            ],
+            [
+              "文獻探索",
+              "Litmaps",
+              "",
+              "從種子文獻延伸關係地圖與相關研究。",
+              "",
+              "從種子文獻查找相關研究，也可追蹤後續研究。",
+              [
+                [
+                  "Litmaps",
+                  "https://www.litmaps.com/"
+                ]
+              ],
+              false
+            ],
+            [
+              "文獻管理",
+              "Zotero",
+              "",
+              "收藏、分類、註記與管理引用。",
+              "",
+              "可作為 EndNote 的替代文獻庫，後續在 Word 插入引用與參考文獻。",
+              [
+                [
+                  "Zotero",
+                  "https://www.zotero.org/"
+                ]
+              ],
+              false
+            ],
+            [
+              "03",
+              "專題找文獻：從關鍵字開始",
+              "GPT → 文獻搜尋 → Litmaps",
+              "從中文想法拆出英文概念與搜尋式，找到種子文獻後延伸探索，銜接研究單元。",
+              "https://chatgpt.com/",
+              "我的專題是……。請列出中英文關鍵字、同義詞與三組由廣到窄的搜尋式，先不要列文獻。\n接著到適合學科的資料庫搜尋，選一篇相關文獻，再以 Litmaps 延伸探索。",
+              [
+                [
+                  "GPT",
+                  "https://chatgpt.com/"
+                ],
+                [
+                  "Litmaps",
+                  "https://www.litmaps.com/"
+                ]
+              ]
+            ],
+            [
+              "文獻閱讀",
+              "Moonlight",
+              "",
+              "單篇論文翻譯、註記與圖表提問。",
+              "",
+              "讀單篇論文時可對照翻譯、標記段落，並針對圖表提問。",
+              [
+                [
+                  "Moonlight",
+                  "https://www.themoonlight.io/en"
+                ]
+              ],
+              false
+            ],
+            [
+              "02",
+              "文獻探索與閱讀管理",
+              "Litmaps · Zotero · Scite · Moonlight · NotebookLM",
+              "延伸文獻關係、管理引用，讀懂英文與圖表，再整理多篇研究的證據。",
+              "https://www.litmaps.com/",
+              "Litmaps：從種子文獻延伸關係地圖。\nZotero：收藏、分類、註記與插入引用。\nScite：查看支持、對比與提及的引用上下文，分類數量不等於真假票數。\nMoonlight：單篇對照翻譯、註記及圖表提問。\nNotebookLM：多篇比較研究問題、樣本、方法、結果與限制，保留來源位置。\n\n提示詞：請先解釋圖中的座標、單位、組別與結果，再比較這幾篇文獻的方法及限制。區分原文證據、作者解釋與仍待驗證的推論。",
+              [
+                [
+                  "Litmaps",
+                  "https://www.litmaps.com/"
+                ],
+                [
+                  "Zotero",
+                  "https://www.zotero.org/"
+                ],
+                [
+                  "Scite",
+                  "https://scite.ai/"
+                ],
+                [
+                  "Moonlight",
+                  "https://www.themoonlight.io/en"
+                ],
+                [
+                  "NotebookLM",
+                  "https://notebooklm.google.com/"
+                ]
+              ]
+            ],
+            [
+              "研究圖像・補充",
+              "FigureLabs",
+              "",
+              "研究示意圖範例，仍需核對科學意義。",
+              "",
+              "製作研究示意圖，完成後核對圖中的標籤與關係。",
+              [
+                [
+                  "FigureLabs",
+                  "https://www.figurelabs.ai/"
+                ]
+              ],
+              false
+            ],
+            [
+              "04",
+              "論文產出與口試",
+              "GPT／Claude · FigureLabs",
+              "檢查論文脈絡、改善空泛文字，補充研究示意圖，最後以口委立場模擬追問。",
+              "https://chatgpt.com/",
+              "論文寫作：檢查研究問題、方法、結果與結論是否一致，標記論述跳躍、證據不足與過度推論。保留作者觀點與原意，不新增數據或引用。\nGitHub 寫作專案：待自行實測後補入，不承諾通過 AI 偵測。\nFigureLabs：補充研究示意圖範例，核對箭頭、標籤與科學意義。\n\n口試提示詞：請根據附件摘要、方法、結果與簡報扮演口委，一次只問一題。等我回答後再追問，指出回答缺漏與需要補充的證據，勿替我編造研究結果。",
+              [
+                [
+                  "ChatGPT",
+                  "https://chatgpt.com/"
+                ],
+                [
+                  "Claude",
+                  "https://claude.ai/"
+                ],
+                [
+                  "FigureLabs",
+                  "https://www.figurelabs.ai/"
+                ]
+              ]
+            ]
+          ],
+          "sectionTitles": {
+            "0": "把發散的想法梳理成研究題目",
+            "2": "查找文獻及管理",
+            "5": "閱讀文獻",
+            "7": "圖表繪製"
+          }
+        },
+        {
+          "name": "所有工具",
+          "columns": 3,
+          "items": [],
+          "catalog": true,
+          "subtitle": "集中查找講座工具與入口；各平台帳號、額度及安裝需求依官方說明。",
+          "excludedTools": [
+            "Gamma",
+            "NotebookLM",
+            "Anki",
+            "ChatHub",
+            "Litmaps",
+            "Zotero",
+            "Moonlight",
+            "FigureLabs"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "建立 AI 工作流",
+      "subtitle": "依任務選擇工具組合。",
+      "items": [
+        [
+          "01",
+          "研究定題與搜尋",
+          "GPT／Claude · Elicit",
+          "梳理研究想法、研究價值與現有困境，產生關鍵字並檢視研究設計。",
+          "https://chatgpt.com/",
+          "操作順序：研究想法 → 核心問題與可行性 → 中英文關鍵字與搜尋式 → 近期文獻 → 現有困境、研究缺口與價值 → 研究設計批判。\n\n提示詞：我的研究構想是……。請先拆解研究問題、對象與變項，列出關鍵字與搜尋式。根據我提供的文獻，整理目前限制、可驗證的研究方向、混淆變項與替代解釋。區分有來源支持的判斷與仍待查證的想法。",
+          [
+            [
+              "ChatGPT",
+              "https://chatgpt.com/"
+            ],
+            [
+              "Claude",
+              "https://claude.ai/"
+            ],
+            [
+              "Elicit",
+              "https://elicit.com/"
+            ]
+          ]
+        ],
+        [
+          "02",
+          "文獻探索與閱讀管理",
+          "Litmaps · Zotero · Scite · Moonlight · NotebookLM",
+          "延伸文獻關係、管理引用，讀懂英文與圖表，再整理多篇研究的證據。",
+          "https://www.litmaps.com/",
+          "Litmaps：從種子文獻延伸關係地圖。\nZotero：收藏、分類、註記與插入引用。\nScite：查看支持、對比與提及的引用上下文，分類數量不等於真假票數。\nMoonlight：單篇對照翻譯、註記及圖表提問。\nNotebookLM：多篇比較研究問題、樣本、方法、結果與限制，保留來源位置。\n\n提示詞：請先解釋圖中的座標、單位、組別與結果，再比較這幾篇文獻的方法及限制。區分原文證據、作者解釋與仍待驗證的推論。",
+          [
+            [
+              "Litmaps",
+              "https://www.litmaps.com/"
+            ],
+            [
+              "Zotero",
+              "https://www.zotero.org/"
+            ],
+            [
+              "Scite",
+              "https://scite.ai/"
+            ],
+            [
+              "Moonlight",
+              "https://www.themoonlight.io/en"
+            ],
+            [
+              "NotebookLM",
+              "https://notebooklm.google.com/"
+            ]
+          ]
+        ],
+        [
+          "03",
+          "腳本與開源工具",
+          "GitHub · VS Code · 程式代理",
+          "從網頁版任務規格接續執行腳本，尋找模型專案，並核對程式結果。",
+          "https://github.com/",
+          "操作順序：GPT 網頁版整理任務規格 → GitHub 找工具與模型專案 → 檢查 README、授權、環境與模型權重 → 交給 VS Code 中的程式代理或 CLI 實作 → 用小資料驗證結果。\nSkills 作為重用工作流程的延伸介紹。\n\n提示詞：請根據這份規格列出輸入、處理步驟、輸出格式與驗收方法，再撰寫腳本。先用我能人工核對的小範例執行，說明缺失值、單位與錯誤如何處理。",
+          [
+            [
+              "GitHub",
+              "https://github.com/"
+            ],
+            [
+              "Hugging Face",
+              "https://huggingface.co/"
+            ],
+            [
+              "VS Code",
+              "https://code.visualstudio.com/"
+            ],
+            [
+              "Codex",
+              "https://developers.openai.com/codex/"
+            ],
+            [
+              "Claude Code",
+              "https://code.claude.com/docs/"
+            ]
+          ]
+        ],
+        [
+          "04",
+          "論文產出與口試",
+          "GPT／Claude · FigureLabs",
+          "檢查論文脈絡、改善空泛文字，補充研究示意圖，最後以口委立場模擬追問。",
+          "https://chatgpt.com/",
+          "論文寫作：檢查研究問題、方法、結果與結論是否一致，標記論述跳躍、證據不足與過度推論。保留作者觀點與原意，不新增數據或引用。\nGitHub 寫作專案：待自行實測後補入，不承諾通過 AI 偵測。\nFigureLabs：補充研究示意圖範例，核對箭頭、標籤與科學意義。\n\n口試提示詞：請根據附件摘要、方法、結果與簡報扮演口委，一次只問一題。等我回答後再追問，指出回答缺漏與需要補充的證據，勿替我編造研究結果。",
+          [
+            [
+              "ChatGPT",
+              "https://chatgpt.com/"
+            ],
+            [
+              "Claude",
+              "https://claude.ai/"
+            ],
+            [
+              "FigureLabs",
+              "https://www.figurelabs.ai/"
+            ]
+          ]
+        ]
+      ],
+      "pages": [
+        {
+          "name": "工作流與工具組合",
+          "columns": 2,
+          "items": [
+            [
+              "01",
+              "學術研究與論文撰寫",
+              "",
+              "ChatHub → Codex → Litmaps → Zotero → Moonlight → Word",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "02",
+              "課堂教材與長期複習",
+              "",
+              "Codex → NotebookLM → Anki",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "03",
+              "AI 簡報製作",
+              "",
+              "Codex → Markdown → Gamma → PowerPoint",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "04",
+              "批次文件處理",
+              "",
+              "Codex → GitHub → CLI",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "05",
+              "研究資料與學術圖表",
+              "",
+              "Codex → Python → Excel → FigureLabs → Word",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "06",
+              "多模型比較與資訊查證",
+              "",
+              "ChatHub → 多模型比較 → 人工查證",
+              "",
+              "",
+              [],
+              false
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AI 限制與倫理",
+      "subtitle": "查證研究判斷、保護資料，並驗收 AI 的執行結果。",
+      "items": [],
+      "pages": [
+        {
+          "name": "查證、隱私與資安",
+          "columns": 2,
+          "items": [
+            [
+              "01",
+              "研究缺口要回查文獻",
+              "",
+              "AI 可以協助提出研究缺口，但不能只因為 AI 沒有找到文獻，就認定該研究尚未有人進行。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "02",
+              "上傳前確認資料使用權限",
+              "",
+              "資料可能涉及隱私或著作權。受試者資料若有上傳需要，先去識別並確認使用權限。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "03",
+              "核對 AI 是否真的做完",
+              "",
+              "AI 回報完成後，仍要依原先交代的要求逐項檢查結果。",
+              "",
+              "",
+              [],
+              false
+            ],
+            [
+              "04",
+              "操作檔案前先備份",
+              "",
+              "AI Agent 可以操作檔案。重要資料需先備份，避免直接執行危險指令。",
+              "",
+              "",
+              [],
+              false
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "tools": [
+    [
+      "ChatGPT",
+      "溝通與構想",
+      "梳理需求、任務規格、研究討論與口試演練。",
+      "https://chatgpt.com/"
+    ],
+    [
+      "Claude",
+      "溝通與構想",
+      "研究討論、文字邏輯檢查與問答演練。",
+      "https://claude.ai/"
+    ],
+    [
+      "Gemini",
+      "溝通與構想",
+      "提問、想法整理與課堂任務。",
+      "https://gemini.google.com/"
+    ],
+    [
+      "Gamma",
+      "簡報製作",
+      "將確認過的建議書與大綱轉成簡報初稿。",
+      "https://gamma.app/"
+    ],
+    [
+      "NotebookLM",
+      "學習與閱讀",
+      "整理一組來源、筆記、文獻比較與模擬測驗。",
+      "https://notebooklm.google.com/"
+    ],
+    [
+      "Anki",
+      "學習與複習",
+      "製作小卡並安排長期複習。",
+      "https://apps.ankiweb.net/"
+    ],
+    [
+      "Litmaps",
+      "文獻探索",
+      "從種子文獻延伸關係地圖與相關研究。",
+      "https://www.litmaps.com/"
+    ],
+    [
+      "Zotero",
+      "文獻管理",
+      "收藏、分類、註記與管理引用。",
+      "https://www.zotero.org/"
+    ],
+    [
+      "Scite",
+      "引用情境",
+      "查看支持、對比、提及的引用語句與上下文。",
+      "https://scite.ai/"
+    ],
+    [
+      "Moonlight",
+      "文獻閱讀",
+      "單篇論文翻譯、註記與圖表提問。",
+      "https://www.themoonlight.io/en"
+    ],
+    [
+      "Elicit",
+      "文獻整理",
+      "文獻探索與結構化資料擷取，作為延伸工具。",
+      "https://elicit.com/"
+    ],
+    [
+      "MarkItDown",
+      "文件轉換",
+      "文件轉 Markdown，準備反覆使用的文字材料。",
+      "https://github.com/microsoft/markitdown"
+    ],
+    [
+      "Docling",
+      "文件轉換",
+      "處理文件版面、表格與 OCR，並匯出結構化內容。",
+      "https://github.com/docling-project/docling"
+    ],
+    [
+      "GitHub",
+      "開源專案",
+      "尋找研究模型、工具與實作專案。",
+      "https://github.com/"
+    ],
+    [
+      "Hugging Face",
+      "模型資源",
+      "探索模型、資料集與相關範例。",
+      "https://huggingface.co/"
+    ],
+    [
+      "VS Code",
+      "程式工作環境",
+      "查看任務規格、編輯程式與核對執行結果。",
+      "https://code.visualstudio.com/"
+    ],
+    [
+      "Codex",
+      "程式代理",
+      "搭配編碼工作環境協助實作與驗證。",
+      "https://developers.openai.com/codex/"
+    ],
+    [
+      "Claude Code",
+      "程式代理",
+      "依任務規格協助撰寫與執行程式。",
+      "https://code.claude.com/docs/"
+    ],
+    [
+      "FigureLabs",
+      "研究圖像・補充",
+      "研究示意圖範例，仍需核對科學意義。",
+      "https://www.figurelabs.ai/"
+    ],
+    [
+      "ChatHub",
+      "多模型比較",
+      "並排比較不同 AI 模型的回覆。",
+      "https://chathub.gg/"
+    ]
+  ],
+  "pageTitles": [
+    "基本功",
+    "AI 工具與網站",
+    "建立 AI 工作流",
+    "AI 限制與倫理"
+  ],
+  "categories": [
+    "全部",
+    "文獻相關",
+    "溝通與構想",
+    "筆記整理與複習",
+    "論文撰寫與圖表繪製",
+    "文件處理與程式工具"
+  ],
+  "toolCategories": {
+    "ChatGPT": [
+      "溝通與構想",
+      "論文撰寫與圖表繪製"
+    ],
+    "Claude": [
+      "溝通與構想",
+      "論文撰寫與圖表繪製"
+    ],
+    "Gemini": [
+      "溝通與構想"
+    ],
+    "Gamma": [
+      "論文撰寫與圖表繪製"
+    ],
+    "NotebookLM": [
+      "文獻相關",
+      "筆記整理與複習"
+    ],
+    "Anki": [
+      "筆記整理與複習"
+    ],
+    "Litmaps": [
+      "文獻相關"
+    ],
+    "Zotero": [
+      "文獻相關"
+    ],
+    "Scite": [
+      "文獻相關"
+    ],
+    "Moonlight": [
+      "文獻相關"
+    ],
+    "Elicit": [
+      "文獻相關"
+    ],
+    "MarkItDown": [
+      "文件處理與程式工具"
+    ],
+    "Docling": [
+      "文件處理與程式工具"
+    ],
+    "GitHub": [
+      "文件處理與程式工具"
+    ],
+    "Hugging Face": [
+      "文件處理與程式工具"
+    ],
+    "VS Code": [
+      "文件處理與程式工具"
+    ],
+    "Codex": [
+      "文件處理與程式工具"
+    ],
+    "Claude Code": [
+      "文件處理與程式工具"
+    ],
+    "FigureLabs": [
+      "論文撰寫與圖表繪製"
+    ],
+    "ChatHub": [
+      "溝通與構想"
+    ]
+  },
+  "labels": {
+    "brand": "<font style=\"font-size: 48px;\">從課堂到論文・AI 操作指南</font>",
+    "eyebrow": "<font style=\"font-size: 18px;\">AI × LEARNING &amp; RESEARCH</font>",
+    "footer": "<br>",
+    "copy": "複製範例"
+  },
+  "style": {},
+  "position": {
+    "group": 0,
+    "page": 0
+  },
+  "layoutVersion": 2
+}

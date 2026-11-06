@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /guides/lecture {
+      allow get: if true;
+      allow list, delete: if false;
+      // Google 簽發、已驗證的指定帳號才能寫入；前端設定不能改變此授權。
+      allow create, update: if request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.email == '113205104@gms.tcu.edu.tw'
+        && request.resource.data.keys().hasOnly(['payload', 'revision', 'updatedAt'])
+        && request.resource.data.payload is string
+        && request.resource.data.payload.size() < 900000
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.revision is int
+        && ((!exists(/databases/$(database)/documents/guides/lecture)
+              && request.resource.data.revision == 1)
+            || (exists(/databases/$(database)/documents/guides/lecture)
+              && request.resource.data.revision == resource.data.revision + 1));
+    }
+  }
+}

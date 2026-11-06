@@ -1,0 +1,358 @@
+<!doctype html><html lang="zh-Hant"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>講座互動指南</title><style>body{margin:16px auto;max-width:1120px;padding:0 12px;font-family:system-ui}button,input,select{font:inherit}button{cursor:pointer} .viz-carousel section[hidden]{display:none}#gear{position:absolute;right:24px;top:12px;z-index:4}#editor{padding:16px;background:#eef5f3;color:#203c43}#editor fieldset{margin:12px 0;border:1px solid #acc6c0}#editor label{display:block;margin:8px 0}.field{background:white;border:1px solid #acc6c0;padding:8px;min-height:24px}#bar{position:sticky;top:0;background:#eef5f3;padding:8px;z-index:5;display:flex;gap:5px;flex-wrap:wrap}</style><!--CONFIG--><div class="viz-carousel" aria-label="互動指南樣式提案" data-previous-label="上一款" data-next-label="下一款">
+  <section data-variant="卡片指南" aria-label="卡片指南樣式"><div id="guide-cards" class="lecture-mock" aria-label="卡片指南外觀"></div></section>
+  
+</div>
+<style>
+.lecture-mock [hidden]{display:none!important}
+.lecture-mock .lg-category{display:flex;gap:12px;align-items:center;flex-wrap:wrap;width:100%}
+.lecture-mock .lg-category label{display:flex;gap:10px;align-items:center;max-width:100%;font-size:14px}
+.lecture-mock .lg-category select{font:inherit;color:var(--lg-text);background:var(--lg-card);border:1px solid var(--lg-line);border-radius:24px;padding:10px 16px;max-width:100%;min-width:0;cursor:pointer}
+.lecture-mock .lg-category-note{font-size:12px;opacity:.85}
+.lecture-mock article{position:relative;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease}
+.lecture-mock article.lg-selected{transform:translateY(-4px) scale(1.018);border-color:var(--lg-button);box-shadow:0 10px 24px color-mix(in srgb,var(--lg-button) 18%,transparent),0 0 0 2px var(--lg-button);z-index:1}
+.lecture-mock .lg-title-button{border:0;background:transparent;color:inherit;padding:0;font:inherit;line-height:inherit;text-align:left;cursor:pointer;width:100%;border-radius:3px}
+@media(hover:hover){.lecture-mock article:not(.lg-selected):hover{transform:translateY(-2px);box-shadow:0 5px 14px color-mix(in srgb,var(--lg-button) 10%,transparent)}}
+@media(prefers-reduced-motion:reduce){.lecture-mock article{transition:none}.lecture-mock article.lg-selected,.lecture-mock article:not(.lg-selected):hover{transform:none}}
+.lecture-mock{--lg-bg:light-dark(#f3f7f7,#142126);--lg-card:light-dark(#ffffff,#203038);--lg-text:light-dark(#203c43,#e5f1f2);--lg-line:light-dark(#bdd1d3,#55737a);--lg-button:light-dark(#176b73,#93d5d6);--lg-button-text:light-dark(#ffffff,#112c32);font-family:"Microsoft JhengHei","PingFang TC",sans-serif;background:var(--lg-bg);color:var(--lg-text);padding:24px;border-radius:14px;min-height:610px;box-sizing:border-box;font-size:16px;line-height:1.7}
+.lecture-mock *{box-sizing:border-box}.lecture-mock header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--lg-line);padding-bottom:16px;padding-right:70px}.lecture-mock .lg-brand{font-weight:700;letter-spacing:.04em}.lecture-mock .lg-eyebrow{font-size:12px;letter-spacing:.12em;opacity:.8}.lecture-mock h2{font-size:30px;line-height:1.35;margin:20px 0 8px;font-weight:700}.lecture-mock p{margin:0 0 14px}.lecture-mock nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.lecture-mock button,.lecture-mock a{font:inherit}.lecture-mock button{cursor:pointer}.lecture-mock .lg-tab,.lecture-mock .lg-secondary{background:var(--lg-card);color:var(--lg-text);border:1px solid var(--lg-line);padding:9px 14px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.lecture-mock .lg-tab[aria-selected=true],.lecture-mock .lg-primary{background:var(--lg-button);color:var(--lg-button-text);border:1px solid var(--lg-button);padding:9px 14px;border-radius:8px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}.lecture-mock .lg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.lecture-mock article{background:var(--lg-card);border:1px solid var(--lg-line);border-top:4px solid var(--lg-button);border-radius:12px;padding:18px;display:flex;flex-direction:column;min-width:0}.lecture-mock article h3{font-size:20px;line-height:1.4;margin:10px 0}.lecture-mock .lg-tag{font-size:12px;letter-spacing:.04em}.lecture-mock .lg-description{flex:1}.lecture-mock .lg-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.lecture-mock details{margin-top:14px;border-top:1px solid var(--lg-line);padding-top:12px}.lecture-mock summary{cursor:pointer;font-weight:700}.lecture-mock .lg-prompt{white-space:pre-wrap;overflow-wrap:anywhere;margin:12px 0;font-size:inherit}.lecture-mock footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px;font-size:12px}.lecture-mock .lg-live{min-height:24px;font-size:13px;margin-top:10px}.lecture-focus .lg-grid{grid-template-columns:1fr}.lecture-focus article{max-width:100%;padding:28px}.lecture-focus article h3{font-size:30px}.lecture-focus .lg-stepnav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}.lecture-mock a:focus-visible,.lecture-mock button:focus-visible,.lecture-mock summary:focus-visible{outline:3px solid var(--lg-button);outline-offset:3px}
+@media(max-width:700px){.lecture-mock{padding:16px;min-height:610px}.lecture-mock .lg-grid{grid-template-columns:1fr}.lecture-mock header{padding-right:70px}.lecture-mock h2{font-size:25px}.lecture-focus article{padding:18px}.lecture-focus article h3{font-size:24px}.lecture-mock .lg-tab{padding:8px 10px}}
+.lecture-mock nav{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-bottom:1px solid var(--lg-line);margin:22px 0 24px;padding-bottom:0}
+.lecture-mock nav .lg-tab,.lecture-mock nav .lg-tab[aria-selected=true]{display:block;text-align:center;border:0;border-radius:0;background:transparent;color:var(--lg-text);padding:16px 6px;min-width:0}
+.lecture-mock nav .lg-tab[aria-selected=true]{color:var(--lg-button);font-weight:700}
+.lecture-mock nav::after{content:"";position:absolute;left:0;bottom:-1px;width:25%;height:3px;border-radius:3px;background:var(--lg-button);transform:translateX(calc(var(--lg-tab-index,0) * 100%));transition:transform 240ms cubic-bezier(.22,.68,.25,1);pointer-events:none}
+.lecture-mock .lg-basics article h3{font-size:22px}.lecture-mock .lg-basics .lg-description{flex:initial}.lecture-mock .lg-basics article.lg-selected{transform:translateY(-3px) scale(1.005)}
+.lecture-mock .lg-filter-options{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.lecture-mock .lg-filter-options button{font-size:14px;border-radius:24px;padding:7px 12px}
+@media(max-width:440px){.lecture-mock nav .lg-tab{font-size:13px;padding:14px 3px}.lecture-mock .lg-filter-options button{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.lecture-mock nav::after{transition:none}.lecture-mock .lg-basics article.lg-selected{transform:none}}
+.lecture-mock article .lg-actions .lg-primary,.lecture-mock article .lg-actions .lg-secondary{font-size:.8em;padding:7.2px 11.2px;gap:4.8px;border-radius:6.4px}
+.lecture-mock .lg-grid.lg-research{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+.lecture-mock .lg-research article{padding:20px}.lecture-mock .lg-research article h3{font-size:22px}
+.lecture-mock .lg-related{display:flex;flex-wrap:wrap;gap:8px 16px;margin:10px 0}.lecture-mock .lg-related a{color:var(--lg-button);text-underline-offset:3px}
+@media(max-width:640px){.lecture-mock .lg-grid.lg-research{grid-template-columns:1fr}}
+@media(pointer:coarse){.lecture-mock article .lg-actions a,.lecture-mock article .lg-actions button{min-height:44px}}
+.lecture-mock .lg-description{flex:0 0 auto}
+.lecture-mock article{justify-content:flex-start}
+.lecture-mock .lg-tool-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-size:14px;letter-spacing:0}
+.lecture-mock .lg-tool-line a,.lecture-mock .lg-tool-title{display:inline-block;color:var(--lg-button);font-weight:650;text-decoration:none;text-underline-offset:4px;transition:color 100ms ease,transform 100ms ease}
+.lecture-mock .lg-tool-line a:hover,.lecture-mock .lg-tool-title:hover{text-decoration:underline}
+.lecture-mock .lg-tool-line a:active,.lecture-mock .lg-tool-title:active,.lecture-mock .lg-link-pressed{color:color-mix(in srgb,var(--lg-button) 65%,#000)!important;transform:translateY(1px)}
+.lecture-mock article .lg-actions [data-copy]{background:var(--lg-copy,#245a43);border-color:var(--lg-copy,#245a43);color:#fff}
+@media(prefers-reduced-motion:reduce){.lecture-mock .lg-tool-line a,.lecture-mock .lg-tool-title{transition:none}}
+
+.lecture-mock .lg-filter-options[hidden]{display:none}
+.lecture-mock article .guide-static-content{border-top:1px solid var(--lg-line);margin-top:14px;padding-top:12px}
+.lecture-mock article .guide-static-content>.lg-description{flex:initial;margin-bottom:0}
+.lecture-mock article .guide-static-content>.lg-prompt:first-child{margin-top:0}
+.lecture-mock .guide-section-heading::before,.lecture-mock .guide-section-heading::after{content:none!important}
+.lecture-mock .guide-section-heading{grid-column:1/-1;margin:12px 0 0;padding:0;border:0!important;box-shadow:none!important;background:none!important;color:#183c43;font-size:clamp(18px,2vw,22px);line-height:1.35;font-weight:700}
+.lecture-mock .guide-section-edit{display:none}
+.guide-editing .lecture-mock .guide-section-heading{cursor:pointer}
+.guide-editing .lecture-mock .guide-section-edit{display:inline-block;margin-left:12px;padding:5px 10px;border:1px solid #a9c4c5;border-radius:8px;background:#fff;color:#176b73;font-size:14px}
+.lecture-mock article .lg-description,.lecture-mock article summary,.lecture-mock article .lg-prompt{font-size:max(18px,1em);line-height:1.65}
+.lecture-mock article .lg-prompt strong{color:#173f46;font-weight:750}
+.lecture-mock .lg-grid.guide-custom-layout{grid-template-columns:repeat(var(--guide-columns),minmax(0,1fr))}
+.lecture-mock .guide-section-grid{grid-column:1/-1;display:grid;grid-template-columns:repeat(var(--guide-section-columns),minmax(0,1fr));gap:16px;min-width:0}
+@media(max-width:850px){.lecture-mock .guide-section-grid{grid-template-columns:repeat(min(var(--guide-section-columns),2),minmax(0,1fr))}}
+@media(max-width:600px){.lecture-mock .guide-section-grid{grid-template-columns:1fr}}
+@media(max-width:850px){.lecture-mock .lg-grid.guide-custom-layout{grid-template-columns:repeat(min(var(--guide-columns),2),minmax(0,1fr))}}
+@media(max-width:600px){.lecture-mock .lg-grid.guide-custom-layout{grid-template-columns:1fr}}
+</style>
+<script>
+(()=>{
+const groups=[
+{name:'共同基本功',subtitle:'先把需求說清楚，再讓 AI 接手。',items:[
+['01','把發散想法整理成任務規格','GPT 網頁版','將目標、使用條件、材料與限制，整理成能執行、能檢查的任務。','https://chatgpt.com/','以下是我的想法：……\n請整理目標、使用對象、使用條件、輸入材料、執行順序及驗收標準。分開列出已確認需求、建議與待確認事項。'],
+['02','準備反覆使用的長文件','Markdown · 文件整理','針對網頁版反覆使用的長文件，展示轉檔、章節整理與內容抽查。','https://github.com/microsoft/markitdown','請依章節整理這份文件，保留來源資訊與圖表編號。資訊缺漏或擷取異常的地方請標記。'],
+['03','追問與檢查成果','GPT 網頁版','展示同一項需求如何逐輪修正，逐項對照任務規格。','https://chatgpt.com/','請對照任務規格檢查這份成果，指出未完成項目、未經確認的假設及需要我判斷的事項。']
+]},
+{name:'大學生學習',subtitle:'從講義、報告到考前練習，帶走可以直接使用的方法。',items:[
+['01','建議書生成簡報','GPT → Gamma','先確認報告主線，再將建議書與大綱轉成簡報初稿。','https://gamma.app/','請將這份建議書整理成 8 張投影片的大綱，每張只保留一個主要訊息，並標示需要補充的證據。'],
+['02','筆記整理與考前模擬題','NotebookLM · GPT · Anki','以講義整理重點、回查來源，並根據課程內容模擬出題。','https://notebooklm.google.com/','筆記整理：提供講義與自己的筆記，整理章節重點、概念比較表與不理解的問題，回查來源。\n考前模擬：依課程目標、講義與歷屆試題產生練習題，作答後整理弱點；Anki 作為小卡與長期複習補充。\n\n提示詞：請根據講義整理概念比較表，再一次出一題考前練習。等我回答後再解釋並指出需要複習的內容。',[['NotebookLM','https://notebooklm.google.com/'],['ChatGPT','https://chatgpt.com/'],['Anki','https://apps.ankiweb.net/']]],
+['03','專題找文獻：從關鍵字開始','GPT → 文獻搜尋 → Litmaps','從中文想法拆出英文概念與搜尋式，找到種子文獻後延伸探索，銜接研究單元。','https://chatgpt.com/','我的專題是……。請列出中英文關鍵字、同義詞與三組由廣到窄的搜尋式，先不要列文獻。\n接著到適合學科的資料庫搜尋，選一篇相關文獻，再以 Litmaps 延伸探索。']
+]},
+{name:'研究與論文',subtitle:'定題與搜尋 → 閱讀與管理 → 工具實作 → 論文與口試。',items:[
+['01','研究定題與搜尋','GPT／Claude · Elicit','梳理研究想法、研究價值與現有困境，產生關鍵字並檢視研究設計。','https://chatgpt.com/','操作順序：研究想法 → 核心問題與可行性 → 中英文關鍵字與搜尋式 → 近期文獻 → 現有困境、研究缺口與價值 → 研究設計批判。\n\n提示詞：我的研究構想是……。請先拆解研究問題、對象與變項，列出關鍵字與搜尋式。根據我提供的文獻，整理目前限制、可驗證的研究方向、混淆變項與替代解釋。區分有來源支持的判斷與仍待查證的想法。',[['ChatGPT','https://chatgpt.com/'],['Claude','https://claude.ai/'],['Elicit','https://elicit.com/']]],
+['02','文獻探索與閱讀管理','Litmaps · Zotero · Scite · Moonlight · NotebookLM','延伸文獻關係、管理引用，讀懂英文與圖表，再整理多篇研究的證據。','https://www.litmaps.com/','Litmaps：從種子文獻延伸關係地圖。\nZotero：收藏、分類、註記與插入引用。\nScite：查看支持、對比與提及的引用上下文，分類數量不等於真假票數。\nMoonlight：單篇對照翻譯、註記及圖表提問。\nNotebookLM：多篇比較研究問題、樣本、方法、結果與限制，保留來源位置。\n\n提示詞：請先解釋圖中的座標、單位、組別與結果，再比較這幾篇文獻的方法及限制。區分原文證據、作者解釋與仍待驗證的推論。',[['Litmaps','https://www.litmaps.com/'],['Zotero','https://www.zotero.org/'],['Scite','https://scite.ai/'],['Moonlight','https://www.themoonlight.io/en'],['NotebookLM','https://notebooklm.google.com/']]],
+['03','腳本與開源工具','GitHub · VS Code · 程式代理','從網頁版任務規格接續執行腳本，尋找模型專案，並核對程式結果。','https://github.com/','操作順序：GPT 網頁版整理任務規格 → GitHub 找工具與模型專案 → 檢查 README、授權、環境與模型權重 → 交給 VS Code 中的程式代理或 CLI 實作 → 用小資料驗證結果。\nSkills 作為重用工作流程的延伸介紹。\n\n提示詞：請根據這份規格列出輸入、處理步驟、輸出格式與驗收方法，再撰寫腳本。先用我能人工核對的小範例執行，說明缺失值、單位與錯誤如何處理。',[['GitHub','https://github.com/'],['Hugging Face','https://huggingface.co/'],['VS Code','https://code.visualstudio.com/'],['Codex','https://developers.openai.com/codex/'],['Claude Code','https://code.claude.com/docs/']]],
+['04','論文產出與口試','GPT／Claude · FigureLabs','檢查論文脈絡、改善空泛文字，補充研究示意圖，最後以口委立場模擬追問。','https://chatgpt.com/','論文寫作：檢查研究問題、方法、結果與結論是否一致，標記論述跳躍、證據不足與過度推論。保留作者觀點與原意，不新增數據或引用。\nGitHub 寫作專案：待自行實測後補入，不承諾通過 AI 偵測。\nFigureLabs：補充研究示意圖範例，核對箭頭、標籤與科學意義。\n\n口試提示詞：請根據附件摘要、方法、結果與簡報扮演口委，一次只問一題。等我回答後再追問，指出回答缺漏與需要補充的證據，勿替我編造研究結果。',[['ChatGPT','https://chatgpt.com/'],['Claude','https://claude.ai/'],['FigureLabs','https://www.figurelabs.ai/']]]
+]}
+];
+const tools=[
+ ['ChatGPT','溝通與構想','梳理需求、任務規格、研究討論與口試演練。','https://chatgpt.com/'],
+ ['Claude','溝通與構想','研究討論、文字邏輯檢查與問答演練。','https://claude.ai/'],
+ ['Gemini','溝通與構想','提問、想法整理與課堂任務。','https://gemini.google.com/'],
+ ['Gamma','簡報製作','將確認過的建議書與大綱轉成簡報初稿。','https://gamma.app/'],
+ ['NotebookLM','學習與閱讀','整理一組來源、筆記、文獻比較與模擬測驗。','https://notebooklm.google.com/'],
+ ['Anki','學習與複習','製作小卡並安排長期複習。','https://apps.ankiweb.net/'],
+ ['Litmaps','文獻探索','從種子文獻延伸關係地圖與相關研究。','https://www.litmaps.com/'],
+ ['Zotero','文獻管理','收藏、分類、註記與管理引用。','https://www.zotero.org/'],
+ ['Scite','引用情境','查看支持、對比、提及的引用語句與上下文。','https://scite.ai/'],
+ ['Moonlight','文獻閱讀','單篇論文翻譯、註記與圖表提問。','https://www.themoonlight.io/en'],
+ ['Elicit','文獻整理','文獻探索與結構化資料擷取，作為延伸工具。','https://elicit.com/'],
+ ['MarkItDown','文件轉換','文件轉 Markdown，準備反覆使用的文字材料。','https://github.com/microsoft/markitdown'],
+ ['Docling','文件轉換','處理文件版面、表格與 OCR，並匯出結構化內容。','https://github.com/docling-project/docling'],
+ ['GitHub','開源專案','尋找研究模型、工具與實作專案。','https://github.com/'],
+ ['Hugging Face','模型資源','探索模型、資料集與相關範例。','https://huggingface.co/'],
+ ['VS Code','程式工作環境','查看任務規格、編輯程式與核對執行結果。','https://code.visualstudio.com/'],
+ ['Codex','程式代理','搭配編碼工作環境協助實作與驗證。','https://developers.openai.com/codex/'],
+ ['Claude Code','程式代理','依任務規格協助撰寫與執行程式。','https://code.claude.com/docs/'],
+ ['FigureLabs','研究圖像・補充','研究示意圖範例，仍需核對科學意義。','https://www.figurelabs.ai/']
+];
+groups.push({name:'所有工具',subtitle:'集中查找講座工具與入口；各平台帳號、額度及安裝需求依官方說明。',items:[]});
+const pageTitles=['與 AI 溝通：從想法到具體任務','課堂學習：筆記、考前練習與專題報告','研究實作：從找文獻到論文與口試','所有工具・依用途快速查找'];
+const categories=['全部','文獻相關','溝通與構想','筆記整理與複習','論文撰寫與圖表繪製','文件處理與程式工具'];
+const toolCategories={
+ 'ChatGPT':['溝通與構想','論文撰寫與圖表繪製'],
+ 'Claude':['溝通與構想','論文撰寫與圖表繪製'],
+ 'Gemini':['溝通與構想'],
+ 'Gamma':['論文撰寫與圖表繪製'],
+ 'NotebookLM':['文獻相關','筆記整理與複習'],
+ 'Anki':['筆記整理與複習'],
+ 'Litmaps':['文獻相關'],'Zotero':['文獻相關'],'Scite':['文獻相關'],'Moonlight':['文獻相關'],'Elicit':['文獻相關'],
+ 'MarkItDown':['文件處理與程式工具'],'Docling':['文件處理與程式工具'],'GitHub':['文件處理與程式工具'],'Hugging Face':['文件處理與程式工具'],'VS Code':['文件處理與程式工具'],'Codex':['文件處理與程式工具'],'Claude Code':['文件處理與程式工具'],
+ 'FigureLabs':['論文撰寫與圖表繪製']
+};
+function taskLinks(a){
+ if(a[6])return a[6];
+ if(a[2].includes('Markdown'))return [['MarkItDown','https://github.com/microsoft/markitdown'],['Docling','https://github.com/docling-project/docling']];
+ const result=[];
+ if(a[2].includes('GPT'))result.push(['GPT','https://chatgpt.com/']);
+ for(const t of tools){if(t[0]!=='ChatGPT'&&a[2].includes(t[0]))result.push([t[0],t[3]]);}
+ return result.length?result:[[a[2],a[4]]];
+}
+function taskToolLine(a){return '<div class="lg-tool-line"><span class="lg-tag">'+a[0]+' ／</span>'+taskLinks(a).map(t=>'<a href="'+t[1]+'" target="_blank" rel="noopener noreferrer">'+t[0]+'</a>').join('<span aria-hidden="true">·</span>')+'</div>';}
+const seed={groups,tools,pageTitles,categories,toolCategories,labels:{brand:'從課堂到論文・互動指南',eyebrow:'AI × LEARNING & RESEARCH',footer:'講座互動指南',copy:'複製範例'},style:{}};
+const config=window.guideConfig||seed;
+for(const [i,group] of config.groups.entries()){
+ if(config.layoutVersion===2)continue;
+ if(i===config.groups.length-1)continue;
+ group.pages??=[{name:i===0?'網頁版':'任務總覽',columns:[1,3,2][i],items:group.items}];
+ if(i===0&&!group.desktopSeeded){
+  group.pages.push({name:'桌面版',columns:3,items:[["01","檢查 Git","Git","Git 記錄變更，讓 AI 可以比對差異、建立分支及協助復原。缺少時仍能編輯本機檔案，但 Git 版本管理與儲存庫操作會受阻。","https://git-scm.com/install/windows","在 Windows 執行 git --version。找不到時先查安裝位置與 PATH；確定未安裝才用 winget 的 Git.Git 或 git-scm.com 官方安裝程式。需要我操作時逐步告知。安裝後重新開啟終端並回報 git --version，不要反覆重裝。"],["02","檢查 PowerShell 7","Microsoft Learn","統一使用 pwsh，減少腳本因 PowerShell 版本不同而出錯。缺少時仍可用 Windows PowerShell 5.1，但依賴 PowerShell 7 的指令或腳本可能失敗。","https://learn.microsoft.com/powershell/scripting/install/installing-powershell-on-windows","確認 Windows 是否有 pwsh。缺少時使用 winget 的 Microsoft.PowerShell 或 Microsoft Learn 官方安裝程式，保留 Windows PowerShell 5.1。找不到時先查安裝位置與 PATH，不要重裝。需要我操作時逐步告知。實際用 pwsh 查詢並回報 $PSVersionTable.PSVersion；本對話後續執行 PowerShell 時用 pwsh。"],["03","安裝並登入 GitHub CLI","GitHub CLI","gh 讓 AI 用已授權帳號操作 GitHub 的 PR、議題與私人儲存庫。缺少或未登入時，本機 Git 仍可用，但透過 gh 進行需要帳號授權的操作會受阻。","https://cli.github.com/manual/gh_auth_login","檢查 gh，缺少時用 winget 的 GitHub.cli 或 GitHub CLI 官方來源安裝。先用 gh auth status 檢查；需登入時執行 gh auth login --hostname github.com --web。將終端實際顯示的裝置碼與官方驗證網址各自單獨貼出，逐步請我在瀏覽器授權。最後用 gh auth status 與 gh api user --jq .login 回報帳號，不顯示權杖。"]]});
+  group.desktopSeeded=true;
+ }
+ if(i===0&&!group.desktopSupplementV2){
+  const desktop=group.pages.find(page=>page.name==='桌面版');
+  if(desktop)desktop.items=[["01","Git｜保存修改紀錄","","想留底、看改了哪裡，再用 Git。","","請執行 git --version。找不到時先查安裝位置與 PATH，確定未安裝才用 WinGet 的 Git.Git 或 Git 官方安裝程式，最後回報版本。",[]],["02","PowerShell｜執行腳本","","先沿用能跑示範的版本。腳本要求 PowerShell 7 時，再檢查 pwsh。","","請確認目前使用的 PowerShell 版本。若腳本需要 PowerShell 7，先試 pwsh --version，缺少才用 WinGet 的 Microsoft.PowerShell 或微軟官方安裝程式。保留 5.1，最後驗證版本。",[]],["03","GitHub CLI｜用帳號辦事","","看公開專案可以貼網址。要透過 gh 替你在 GitHub 提問或送審，再準備工具與登入。","","先檢查 gh --version 和 gh auth status。缺少工具才用 WinGet 的 GitHub.cli 或官方來源安裝。需要授權時用 gh auth login --hostname github.com --web，逐步告訴我怎麼在瀏覽器完成，最後回報帳號，不顯示權杖。",[]],["04","研究小隊｜資料夾放什麼","","規則、角色、材料、交辦與成品各有位置。","","AGENTS.md：共用公約。CLAUDE.md：用 @AGENTS.md 指向同一份公約。README.md：給人看的範本說明。team.md：小隊模式。\nroles/：領隊與隊員設定。material/：原始材料，約定只讀。練習可放虛構訪談。\nworkspace/inbox/：交辦單。workspace/outbox/：成品與各版。workspace/log.md：進度與驗收紀錄。.gitignore：列出不納入 Git 的檔案。",[]],["05","換電腦｜先拉再推","","開工拿最新版，收工看改動，確認後再送出。","","開工：先檢查分支和未提交的改動。工作區乾淨時執行 git pull，告訴我更新了什麼。若有衝突，先說明。\n收工：列出修改檔案，特別標出原始材料。等我確認可上傳的範圍，再提交並推送。",[]],["06","手機遠端操作｜補充","","手機可作為遠端入口，依已設定的功能查看進度或交辦任務。","","講解時帶過：手機能做什麼，取決於遠端功能與電腦連線狀態。操作電腦、查看進度與交辦任務是不同功能。",[]]];
+  group.desktopSupplementV2=true;
+ }
+ for(const page of group.pages)for(const card of page.items)card[6]??=taskLinks(card);
+}
+window.guideData=structuredClone(config);
+if(config!==seed){
+ for(const key of ['groups','tools','pageTitles','categories']) seed[key].splice(0,seed[key].length,...config[key]);
+ for(const key of Object.keys(toolCategories)) delete toolCategories[key];
+ Object.assign(toolCategories,config.toolCategories);
+}
+
+function cardBody(card){
+ const collapsible=card[8]??Boolean(card[5]||card[7]!==false);
+ const description='<p class="lg-description">'+card[3]+'</p>';
+ const notes=card[5]?'<div class="lg-prompt">'+desktopNotes(card)+'</div>':'';
+ if(!collapsible)return '<div class="guide-static-content">'+description+notes+'</div>';
+ return description+'<details><summary>展開操作／提示詞</summary><div class="lg-prompt">'+desktopNotes(card)+'</div></details>';
+}
+function desktopHeading(page,index){
+ const title=page?.sectionTitles?.[index];
+ if(title===undefined)return '';
+ return '<div role="heading" aria-level="3" class="guide-section-heading" data-section="'+index+'"><span class="guide-section-title">'+title+'</span><button type="button" class="guide-section-edit">編輯分區</button></div>';
+}
+function desktopNotes(card){
+ const notes=card[5];
+ if(card[0]!=='04'||!notes.startsWith('AGENTS.md：共用公約。'))return notes;
+ return '<strong>規則與角色</strong><br>'+notes
+  .replace('。CLAUDE.md','。<br>CLAUDE.md')
+  .replace('。README.md','。<br>README.md')
+  .replace('。team.md','。<br>team.md')
+  .replace('。material/','。<br><br><strong>原始材料</strong><br>material/')
+  .replace('workspace/inbox/','<strong>交辦與成果</strong><br>workspace/inbox/')
+  .replace('。workspace/outbox/','。<br>workspace/outbox/')
+  .replace('。workspace/log.md','。<br>workspace/log.md')
+  .replace('。.gitignore','。<br>.gitignore');
+}
+for(const [id,focus] of [['guide-cards',false]]){
+ const root=document.getElementById(id);let group=config.position?.group||0,subpage=config.position?.page||0,step=0,category='全部';
+ const style={page:'#f3f7f7',card:'#ffffff',border:'#bdd1d3',button:'#176b73',buttonText:'#ffffff',copy:'#245a43',text:'#203c43',size:16,bold:false,italic:false,...config.style};
+ root.innerHTML='<header><div><div class="lg-eyebrow">'+config.labels.eyebrow+'</div><div class="lg-brand">'+config.labels.brand+'</div></div></header><h2>把 AI 用在你的下一個任務</h2><p class="lg-intro"></p><nav role="tablist" aria-label="講座四個進度"></nav><div class="lg-grid"></div><div class="lg-stepnav" '+(focus?'':'hidden')+'></div><div class="lg-live" aria-live="polite"></div><footer><span>'+config.labels.footer+'</span><span>工具連結以新分頁開啟 ↗</span></footer>';
+ const grid=root.querySelector('.lg-grid'),nav=root.querySelector('nav'),live=root.querySelector('.lg-live');grid.id=id+'-content';grid.setAttribute('role','tabpanel');
+ const filters=document.createElement('div');filters.className='lg-actions';filters.style.margin='0 0 20px';filters.setAttribute('role','group');filters.setAttribute('aria-label','依工具用途分類');grid.before(filters);
+ const pageTabs=document.createElement('div');
+ pageTabs.className='lg-filter-options';
+ pageTabs.dataset.pageTabs='';
+ pageTabs.style.marginBottom='16px';
+ grid.before(pageTabs);
+ function bindCardFocus(){
+ grid.querySelectorAll('article').forEach(card=>{
+ const heading=card.querySelector('h3');
+ if(!heading.querySelector('button,a')){const button=document.createElement('button');button.type='button';button.className='lg-title-button';button.innerHTML=heading.innerHTML;button.setAttribute('aria-pressed','false');button.setAttribute('aria-label','聚焦卡片：'+heading.textContent);heading.replaceChildren(button);}
+ const button=heading.querySelector('button');
+ const toggle=()=>{const selected=!card.classList.contains('lg-selected');grid.querySelectorAll('article').forEach(other=>{other.classList.remove('lg-selected');other.querySelector('.lg-title-button')?.setAttribute('aria-pressed','false')});if(selected){card.classList.add('lg-selected');button?.setAttribute('aria-pressed','true')}live.textContent=selected?'已聚焦：'+heading.textContent+'；再次點選或按 Esc 取消。':'已取消卡片聚焦。'};
+ if(button)button.onclick=toggle;
+ card.onclick=e=>{if(e.target.closest('a,button,details,input,select,textarea')||window.getSelection()?.toString())return;toggle()};
+ });
+ }
+ root.addEventListener('click',e=>{const link=e.target.closest('.lg-tool-line a,.lg-tool-title');if(!link)return;link.classList.add('lg-link-pressed');setTimeout(()=>link.classList.remove('lg-link-pressed'),180)});
+ root.addEventListener('keydown',e=>{if(e.key==='Escape'){grid.querySelectorAll('.lg-selected').forEach(card=>{card.classList.remove('lg-selected');card.querySelector('.lg-title-button')?.setAttribute('aria-pressed','false')});live.textContent='已取消卡片聚焦。'}});
+ function apply(){for(const [k,v] of Object.entries({bg:style.page,card:style.card,line:style.border,button:style.button,'button-text':style.buttonText,copy:style.copy,text:style.text})) root.style.setProperty('--lg-'+k,v);
+document.body.style.setProperty('--guide-background',style.page);
+root.style.fontSize=style.size+'px';
+for(const [key,token] of [['mainSize','main'],['sectionSize','section'],['cardTitleSize','card-title'],['descriptionSize','description'],['bodySize','body']]){
+ const size=Number(style[key]);
+ if(size>=12&&size<=72)root.style.setProperty('--guide-'+token+'-size',size+'px');
+ else root.style.removeProperty('--guide-'+token+'-size');
+}
+root.classList.toggle('guide-uniform-sizes',!!style.uniformSizes);
+root.querySelectorAll('.lg-description,.lg-prompt').forEach(el=>{el.style.fontWeight=style.bold?'700':'400';el.style.fontStyle=style.italic?'italic':'normal'});}
+ function render(){
+ root.dataset.group=group;root.dataset.subpage=subpage;
+ root.querySelector('.lg-intro').innerHTML=groups[group].subtitle;
+ if(!nav.children.length){nav.innerHTML=groups.map((g,i)=>'<button type="button" class="lg-tab" role="tab" id="'+id+'-tab-'+i+'" aria-controls="'+grid.id+'" aria-selected="'+(group===i)+'">'+g.name+'</button>').join('');}
+ nav.querySelectorAll('button').forEach((b,i)=>b.setAttribute('aria-selected',String(group===i)));nav.style.setProperty('--lg-tab-index',group);grid.setAttribute('aria-labelledby',id+'-tab-'+group);
+ nav.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{group=i;subpage=0;step=0;render()});
+ 
+ const pages=groups[group].pages||[];
+ const page=pages[subpage];
+ const allTools=page?.catalog===true;
+ root.querySelector('.lg-intro').innerHTML=page?.subtitle??groups[group].subtitle;
+ pageTabs.hidden=pages.length<=1;
+ pageTabs.replaceChildren();
+ pages.forEach((entry,i)=>{
+  const b=document.createElement('button');
+  b.type='button';
+  b.dataset.pageIndex=i;
+  b.className=i===subpage?'lg-primary':'lg-secondary';
+  b.setAttribute('aria-pressed',String(i===subpage));
+  b.innerHTML=entry.name;
+  b.onclick=()=>{subpage=i;render();pageTabs.children[i].focus()};
+  pageTabs.append(b);
+ });
+ root.querySelector('h2').innerHTML=pageTitles[group];
+ filters.hidden=!allTools;
+ grid.classList.remove('guide-custom-layout');grid.classList.toggle('lg-basics',group===0);
+ grid.classList.toggle('lg-research',group===2);
+ grid.style.gridTemplateColumns=allTools?'repeat(auto-fit,minmax(min(100%,220px),1fr))':'';
+ const stepnav=root.querySelector('.lg-stepnav');stepnav.hidden=true;
+ live.textContent='';
+ if(allTools){
+ if(!filters.querySelector('.lg-filter-options')){filters.innerHTML='<div class="lg-category"><div class="lg-filter-options" role="group" aria-label="工具用途">'+categories.map(c=>'<button type="button" class="lg-secondary">'+c+'</button>').join('')+'</div><span class="lg-category-count"></span></div>';filters.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{category=categories[i];render()});}
+ filters.querySelectorAll('button').forEach((b,i)=>{const active=categories[i]===category;b.className=active?'lg-primary':'lg-secondary';b.setAttribute('aria-pressed',String(active))});
+ const visible=tools.filter(a=>!page.excludedTools?.includes(a[0])&&(category==='全部'||(toolCategories[a[0]]||[]).includes(category)));
+ filters.querySelector('.lg-category-count').textContent=visible.length+' 個工具';
+ grid.innerHTML=visible.map(a=>'<article><span class="lg-tag">'+a[1]+'</span><h3><a class="lg-tool-title" href="'+a[3]+'" target="_blank" rel="noopener noreferrer">'+a[0]+'</a></h3><p class="lg-description">'+a[2]+'</p></article>').join('');
+ live.textContent=category+' · '+visible.length+' 個工具';grid.querySelectorAll('article').forEach((card,i)=>card.dataset.tool=tools.indexOf(visible[i]));bindCardFocus();apply();document.dispatchEvent(new Event('guide-rendered'));return;}
+ const items=page?.items||[];grid.style.setProperty('--guide-columns',String(page?.columns||1));grid.classList.add('guide-custom-layout');
+ grid.innerHTML=items.map((a,index)=>desktopHeading(page,index)+'<article>'+taskToolLine(a)+'<h3>'+a[1]+'</h3>'+cardBody(a)+(a[7]===false?'':'<div class="lg-actions"><button type="button" class="lg-secondary" data-copy>'+config.labels.copy+'</button></div>')+'</article>').join('')+desktopHeading(page,items.length);
+ grid.querySelectorAll('details').forEach(details=>{
+ const summary=details.querySelector('summary'),content=details.querySelector('.lg-prompt');
+ let motion=null,fade=null,intendedOpen=details.open;
+ const label=()=>{summary.textContent=details.open?'收合操作／提示詞':'展開操作／提示詞';summary.setAttribute('aria-expanded',String(details.open))};
+ details.addEventListener('toggle',label);label();
+ summary.addEventListener('click',event=>{
+ event.preventDefault();
+ const opening=motion?!intendedOpen:!details.open;intendedOpen=opening;
+ const start=details.offsetHeight;
+ if(motion){motion.onfinish=null;motion.cancel();motion=null;}if(fade){fade.cancel();fade=null;}
+ details.style.height='';details.style.overflow='';
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches||!details.animate){details.open=opening;label();return;}
+ let end;
+ if(opening){details.open=true;end=details.offsetHeight;}else{details.open=false;end=details.offsetHeight;details.open=true;}
+ details.style.height=start+'px';details.style.overflow='hidden';
+ const current=details.animate([{height:start+'px'},{height:end+'px'}],{duration:opening?160:130,easing:'cubic-bezier(.2,.8,.25,1)',fill:'both'});motion=current;
+ if(opening){fade=content.animate([{opacity:.5,transform:'translateY(-3px)'},{opacity:1,transform:'translateY(0)'}],{duration:140,easing:'ease-out'});}
+ current.onfinish=()=>{if(motion!==current)return;details.open=opening;details.style.height='';details.style.overflow='';current.cancel();motion=null;label();};
+ });
+ });
+ grid.querySelectorAll('article').forEach((card,i)=>{const b=card.querySelector('[data-copy]');if(b)b.onclick=async()=>{try{await navigator.clipboard.writeText(items[i][5]);live.textContent='範例已複製。'}catch{const details=card.querySelector('details');if(details)details.open=true;live.textContent='請選取展開的範例文字後複製。'}};});
+ if(focus){const s=root.querySelector('.lg-stepnav');s.innerHTML='<button type="button" class="lg-secondary" data-prev '+(step===0?'disabled':'')+'>← 上一任務</button><span>'+ (step+1)+' / '+groups[group].items.length+'</span><button type="button" class="lg-secondary" data-next '+(step===groups[group].items.length-1?'disabled':'')+'>下一任務 →</button>';s.querySelector('[data-prev]').onclick=()=>{step--;render()};s.querySelector('[data-next]').onclick=()=>{step++;render()};}
+ grid.querySelectorAll('article').forEach((card,i)=>card.dataset.card=i);
+ const headings=Array.from(grid.querySelectorAll('.guide-section-heading'));
+ headings.forEach(heading=>{
+  const section=document.createElement('div');
+  section.className='guide-section-grid';
+  const columns=Number(page.sectionColumns?.[heading.dataset.section]??page.columns??1);
+  section.style.setProperty('--guide-section-columns',String([1,2,3,4].includes(columns)?columns:1));
+  heading.after(section);
+  while(section.nextElementSibling?.matches('article'))section.append(section.nextElementSibling);
+ });
+ bindCardFocus();apply();
+ document.dispatchEvent(new Event('guide-rendered'));
+ }
+ const initialStyle={...style};
+ window.refreshGuide=(next,position)=>{
+  const data=structuredClone(next);
+  for(const [list,key] of [[groups,'groups'],[tools,'tools'],[pageTitles,'pageTitles'],[categories,'categories']])list.splice(0,list.length,...data[key]);
+  for(const key of Object.keys(toolCategories))delete toolCategories[key];
+  Object.assign(toolCategories,data.toolCategories);
+  Object.assign(config.labels,data.labels);
+  Object.assign(style,initialStyle,data.style);
+  if(position){group=position.group;subpage=position.page;}
+  root.querySelector('.lg-brand').innerHTML=data.labels.brand;
+  root.querySelector('.lg-eyebrow').innerHTML=data.labels.eyebrow;
+  root.querySelector('footer span').innerHTML=data.labels.footer;
+  if(subpage>=(groups[group].pages?.length||0))subpage=0;
+  nav.replaceChildren();
+  render();
+ };
+ render();
+ if(globalThis.Tweak){const t=new Tweak({container:root,onChange:apply});for(const [key,label] of [['page','頁面底色'],['button','按鈕／連結色'],['buttonText','按鈕文字色'],['copy','複製按鈕色'],['card','卡片底色'],['border','卡片／區塊邊框'],['text','文字顏色']])t.addColorPicker(style,key,{label});t.addSlider(style,'size',{label:'內文字級',min:14,max:24,unit:'px'});t.addToggle(style,'bold',{label:'內文粗體'});t.addToggle(style,'italic',{label:'內文斜體'});}
+}
+})();
+</script>
+<style>
+html{background:#f3f7f7}body{margin:0;max-width:none;padding:0;background:var(--guide-background,#f3f7f7)}
+.lecture-mock{min-height:0;border-radius:0;padding:clamp(18px,3vw,48px);max-width:1600px;margin:auto}
+body:has(.lecture-mock){min-height:100vh;background:var(--guide-background,#f3f7f7)}
+#gear{position:fixed;top:18px;right:18px;border:1px solid #a9c4c5;border-radius:999px;min-width:46px;height:46px;padding:0 12px;background:#183c43;color:#fff;font-size:18px;z-index:20}
+#guide-menu,#guide-share{background:#fffdf7;color:#203c43;border:1px solid #d8e3df;border-radius:16px;box-shadow:0 12px 32px #203c4326;padding:12px}
+#guide-menu{position:fixed;right:18px;top:72px;z-index:21;min-width:170px}
+#guide-menu button{display:block;text-align:left;width:100%;padding:12px;border:0;border-radius:8px;background:transparent;color:inherit}
+#guide-menu button:hover{background:#eef5f3}
+#guide-share{width:min(420px,85vw);padding:20px}
+#guide-share input{display:block;width:100%;box-sizing:border-box;margin-top:8px;padding:8px}
+#guide-share button{margin-right:8px}
+#editor{padding-right:82px}#bar{top:0;z-index:10}
+#editor{position:fixed;inset:0;margin:auto;width:min(690px,calc(100vw - 32px));box-sizing:border-box;max-height:90vh;overflow:auto;border:1px solid #acc6c0;border-radius:20px;box-shadow:0 12px 36px #183c4333;padding:20px 24px;background:#f3f7f7}
+#editor::backdrop{background:#183c4366}
+#editor h2{margin:0 0 14px}
+#editor #bar,#editor .editor-footer{background:#f3f7f7;padding:10px 0;display:flex;flex-wrap:wrap;gap:8px}
+#editor .editor-footer{position:sticky;bottom:0;justify-content:flex-end;border-top:1px solid #acc6c0}
+#editor button,#editor select,#editor input{border:1px solid #acc6c0;border-radius:9px;padding:7px 11px;background:#fff;color:#203c43}
+#editor .editor-footer button:nth-child(2){background:#176b73;color:white}
+#editor button:not(:disabled):hover{border-color:#176b73}
+#editor button[aria-pressed="true"]{background:#176b73;border-color:#176b73;color:#fff}
+#editor button:not(:disabled):active,#editor button.guide-clicked{background:#124e56;border-color:#124e56;color:#fff}
+#editor button:focus-visible{outline:2px solid #176b73;outline-offset:2px}
+#editor .guide-color-trigger::before{content:'A';display:inline-block;margin-right:6px;border-bottom:3px solid var(--guide-color-sample,#203c43);font-weight:700}
+#guide-text-palette{flex-basis:100%;padding:12px;border:1px solid #acc6c0;border-radius:12px;background:#fff}
+#guide-text-palette[hidden]{display:none}
+.guide-color-swatches{display:grid;grid-template-columns:repeat(6,28px);gap:7px}
+#editor .guide-color-swatch{width:28px;height:28px;padding:0;border-radius:5px;background:var(--guide-swatch)}
+#editor .guide-color-swatch:hover{outline:2px solid #176b73;outline-offset:1px}
+#guide-text-palette label{display:flex;align-items:center;gap:8px;margin:10px 0 0}
+#guide-text-palette input[type=color]{width:42px;height:30px;padding:2px}
+#editor .field{border-radius:10px;margin-top:5px;min-height:36px;overflow-wrap:anywhere}
+#guide-history{position:fixed;right:96px;top:18px;z-index:20;display:flex;gap:6px}
+#guide-history[hidden]{display:none}
+#guide-history button{width:44px;height:46px;border-radius:999px;border:1px solid #a9c4c5;background:#fff;color:#183c43;font-size:22px}
+#guide-history button:disabled{opacity:.45;cursor:default}
+#guide-history .guide-finish{width:auto;padding:0 14px;background:#183c43;color:white;font-size:16px}
+#guide-menu button[hidden]{display:none}
+#guide-save-notice{position:fixed;top:72px;right:18px;max-width:min(420px,85vw);background:#fffdf7;color:#203c43;border:1px solid #acc6c0;border-radius:12px;padding:12px;z-index:22}
+.lecture-mock .guide-card-order{display:none}
+.guide-editing .lecture-mock .guide-card-order,#editor .guide-card-order{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.lecture-mock .guide-card-order button{padding:5px 10px;border:1px solid var(--lg-line);border-radius:8px;background:var(--lg-card);color:var(--lg-text);font-size:14px}
+.guide-card-order button:disabled{opacity:.45;cursor:default}
+.lecture-mock .guide-page-drag{display:inline-flex;margin-right:7px;padding:2px 5px;border:1px solid currentColor;border-radius:5px;cursor:grab;user-select:none}
+.lecture-mock .guide-page-drag:active{cursor:grabbing}
+.lecture-mock [data-page-index].guide-drop-before{box-shadow:-4px 0 0 var(--lg-button)}
+.lecture-mock [data-page-index].guide-drop-after{box-shadow:4px 0 0 var(--lg-button)}
+.guide-editing .lecture-mock article.guide-card-changed{outline:3px solid var(--lg-button);outline-offset:3px}
+.guide-editing .lecture-mock article:hover,.guide-editing .lecture-mock h2:hover,.guide-editing .lecture-mock .lg-intro:hover{outline:2px solid #176b73;outline-offset:3px}
+.lecture-mock img{max-width:100%;height:auto}
+.lecture-mock>h2{font-size:var(--guide-main-size,30px)}
+.lecture-mock .guide-section-title{font-size:var(--guide-section-size,inherit)}
+.lecture-mock .lg-grid article h3{font-size:var(--guide-card-title-size,22px)}
+.lecture-mock>.lg-intro,.lecture-mock article .lg-description{font-size:var(--guide-description-size,18px)}
+.lecture-mock article .lg-prompt,.lecture-mock article summary{font-size:var(--guide-body-size,18px)}
+.lecture-mock.guide-uniform-sizes :is(h2,.guide-section-title,.lg-grid article h3,.lg-intro,.lg-description,.lg-prompt) :not(img){font-size:inherit!important}
+</style>
