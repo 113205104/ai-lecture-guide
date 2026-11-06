@@ -1,0 +1,31 @@
+/* 同一個電腦版畫布；手機與平板透過橫向捲動查看，不改排欄數。 */
+html { overflow-x: auto; }
+body { width: 1120px; min-width: 1120px; max-width: 1120px; }
+.lecture-mock { padding: 24px; }
+.lecture-mock h2 { font-size: var(--guide-main-size, 30px); }
+.lecture-mock nav .lg-tab,
+.lecture-mock nav .lg-tab[aria-selected="true"] { font-size: 16px; padding: 16px 6px; }
+.lecture-mock .lg-filter-options button { font-size: 14px; }
+.lecture-mock .lg-grid.guide-custom-layout {
+  grid-template-columns: repeat(var(--guide-columns), minmax(0, 1fr));
+}
+.lecture-mock .guide-section-grid {
+  grid-template-columns: repeat(var(--guide-section-columns), minmax(0, 1fr));
+}
+.lecture-mock .lg-grid.lg-research { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lecture-mock .guide-section-heading { font-size: 22px; }
+.lecture-focus article { padding: 28px; }
+.lecture-focus article h3 { font-size: var(--guide-card-title-size, 30px); }
+
+/* 對話框是小螢幕的視窗，內部保留約 640px 的桌面編輯區，可左右滑動。 */
+#editor {
+  width: min(690px, calc(100vw - 16px));
+  max-width: calc(100vw - 16px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+#editor > * { min-width: 640px; box-sizing: border-box; }
+#editor fieldset { min-inline-size: 0; max-inline-size: 100%; box-sizing: border-box; }
+#editor .field { min-inline-size: 0; box-sizing: border-box; overflow-wrap: anywhere; }
+#editor select,
+#editor input { max-inline-size: 100%; box-sizing: border-box; }
