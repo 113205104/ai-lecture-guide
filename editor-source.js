@@ -28,6 +28,15 @@ if(location.protocol==='file:'||window.guideCloud){
  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!gear.contains(e.target))closeMenu();});
  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
  const editor=document.createElement('dialog');editor.id='editor';editor.setAttribute('aria-label','編輯項目');
+ // 手機縮放桌面講義時，彈窗仍以實際可見視窗計算大小。
+ const sizeEditorViewport=()=>{
+  const viewport=window.visualViewport;
+  editor.style.setProperty('--guide-editor-viewport-width',(viewport?.width??window.innerWidth)+'px');
+  editor.style.setProperty('--guide-editor-viewport-height',(viewport?.height??window.innerHeight)+'px');
+ };
+ sizeEditorViewport();
+ window.addEventListener('resize',sizeEditorViewport);
+ window.visualViewport?.addEventListener('resize',sizeEditorViewport);
  document.body.prepend(gear,menu,editor);
  const saveNotice=document.createElement('p');saveNotice.id='guide-save-notice';saveNotice.setAttribute('role','status');saveNotice.hidden=true;document.body.append(saveNotice);
  let noticeTimer;
