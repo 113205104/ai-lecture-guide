@@ -73,7 +73,8 @@ try {
   const bridge = setupPublishBridge({
     getState: () => !auth.currentUser ? 'signed-out' : isOwner(auth.currentUser) && window.guideCloud ? 'owner' : 'other',
     login: () => login.click(),
-    save: data => window.guideCloud.save(data)
+    save: (data, options) => window.guideCloud.save(data, options),
+    getCurrent: () => ({revision, data:structuredClone(window.guideData)})
   });
   onAuthStateChanged(auth, async user => {
     login.textContent = user ? '登出' : '⚙';
@@ -84,20 +85,24 @@ try {
       // 登入後再次拿最新版，儲存以版本號檢查其他裝置的修改。
       apply(await getDocFromServer(ref));
       window.guideCloud = {
-        async save(data) {
+        async save(data, options = {}) {
           if (!isOwner(auth.currentUser)) throw new Error('請先登入講者帳號。');
           const payload = JSON.stringify(data);
+          const expectedRevision = options.expectedRevision ?? revision;
+          if (expectedRevision !== revision) throw new Error('本機與線上版本不同，請先確認要保留的版本。');
           if (new TextEncoder().encode(payload).length >= 900000) throw new Error('講義含圖片的大小超過儲存上限，請先縮小圖片。');
           showNotice('正在儲存到雲端…');
           try {
             await runTransaction(database, async transaction => {
               const current = await transaction.get(ref);
               const remoteRevision = current.exists() ? current.data().revision : 0;
-              if (remoteRevision !== revision) throw new Error('另一台裝置已更新講義。請先匯出目前修改備份，再重新整理後編輯，避免覆蓋。');
-              transaction.set(ref, { payload, revision: revision + 1, updatedAt: serverTimestamp() });
+              if (remoteRevision !== expectedRevision) throw new Error('另一台裝置已更新講義。請先匯出目前修改備份，再重新整理後編輯，避免覆蓋。');
+              transaction.set(ref, { payload, revision: expectedRevision + 1, updatedAt: serverTimestamp() });
             });
-            revision += 1;
+            revision = expectedRevision + 1;
+            window.guideData = structuredClone(data);
             showNotice('已儲存到雲端，其他裝置重新開啟即可讀取。', true);
+            return {revision};
           } catch (error) { showNotice('尚未儲存到雲端。'); throw new Error(message(error)); }
         }
       };

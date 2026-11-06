@@ -1,6 +1,14 @@
 if(location.protocol==='file:'||window.guideCloud){
  let draft=structuredClone(window.guideData),target=null,editing=false;
  const draftKey=window.guideBackupKey||'lecture-guide-draft-v1';
+ const syncKey='lecture-guide-sync-state-v1';
+ let syncState;
+ try{syncState=JSON.parse(localStorage.getItem(syncKey));}catch{}
+ const fingerprint=data=>{
+  const {position,...content}=data;
+  return JSON.stringify(content,(_key,value)=>value&&typeof value==='object'&&!Array.isArray(value)
+   ?Object.fromEntries(Object.keys(value).sort().map(key=>[key,value[key]])):value);
+ };
  const past=[],future=[];
  let last=JSON.stringify(draft);
  const record=()=>{const next=JSON.stringify(draft);if(next!==last){past.push(last);future.length=0;last=next;}};
@@ -19,6 +27,51 @@ if(location.protocol==='file:'||window.guideCloud){
  const editor=document.createElement('dialog');editor.id='editor';editor.setAttribute('aria-label','編輯項目');
  document.body.prepend(gear,menu,editor);
  const saveNotice=document.createElement('p');saveNotice.id='guide-save-notice';saveNotice.setAttribute('role','status');saveNotice.hidden=true;document.body.append(saveNotice);
+ const downloadGuide=(data,name='index.html')=>{
+  const json=JSON.stringify(data).replace(/</g,'\\u003c');
+  const html=publicTemplate.replace('<!--CONFIG-->',()=>'<script>window.guideConfig='+json+';</scr'+'ipt>');
+  const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
+  const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ };
+ const rememberRevision=(revision,data)=>{
+  syncState={revision,fingerprint:fingerprint(data)};
+  try{localStorage.setItem(syncKey,JSON.stringify(syncState));localStorage.setItem(draftKey,JSON.stringify(draft));}catch{}
+ };
+ let checkingCloud=false;
+ const loadCloudDraft=(data,revision)=>{
+  draft=structuredClone(data);last=JSON.stringify(draft);past.length=0;future.length=0;
+  editing=false;target=null;historyControls.hidden=true;edit.hidden=false;
+  document.body.classList.remove('guide-editing');if(editor.open)editor.close();
+  window.guideData=structuredClone(draft);rememberRevision(revision,draft);
+  refresh(draft.position||{group:0,page:0});
+  saveNotice.textContent='已載入線上最新版，本機草稿也已更新。';saveNotice.hidden=false;
+ };
+ const checkForCloud=async()=>{
+  if(location.protocol!=='file:'||checkingCloud||document.hidden)return;
+  checkingCloud=true;
+  const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),12000);
+  try{
+   const url='https://firestore.googleapis.com/v1/projects/ai-lecture-guide/databases/(default)/documents/guides/lecture';
+   const response=await fetch(url,{cache:'no-store',signal:controller.signal});
+   if(!response.ok)return;
+   const documentData=await response.json();
+   const data=JSON.parse(documentData.fields.payload.stringValue);
+   const revision=Number(documentData.fields.revision.integerValue);
+   if(!Number.isInteger(revision)||!Array.isArray(data.groups)||!Array.isArray(data.tools)||!data.labels)return;
+   const remote=fingerprint(data),local=fingerprint(draft);
+   if(local===remote){rememberRevision(revision,data);return;}
+   if(syncState?.revision===revision)return;
+   if(syncState?.fingerprint===local&&!editing&&!editor.open){loadCloudDraft(data,revision);return;}
+   saveNotice.textContent='線上與本機內容不同，已保留兩邊版本，沒有自動覆蓋。';saveNotice.hidden=false;
+   const useCloud=document.createElement('button');useCloud.textContent='備份本機，再載入線上最新版';
+   useCloud.onclick=()=>{downloadGuide(draft,'本機講義-載入線上前備份.html');loadCloudDraft(data,revision);};
+   const keepLocal=document.createElement('button');keepLocal.textContent='保留本機，稍後按匯出更新';
+   keepLocal.onclick=()=>{saveNotice.textContent='已保留本機內容。匯出時會再次檢查線上版本，更新前可先備份線上。';};
+   saveNotice.append(document.createElement('br'),useCloud,keepLocal);
+  }catch{
+   if(!navigator.onLine){saveNotice.textContent='目前離線，使用本機草稿。恢復連線後會重新檢查線上版本。';saveNotice.hidden=false;}
+  }finally{clearTimeout(timeout);checkingCloud=false;}
+ };
  let saving=false;
  const finish=async()=>{
   if(saving)return;
@@ -584,12 +637,12 @@ if(location.protocol==='file:'||window.guideCloud){
   const receive=event=>{
    if(event.source!==popup||event.origin!==origin||event.data?.type!=='guide-sync'||event.data.channel!==channel)return;
    const message=event.data;
-   if(message.action==='ready')popup.postMessage({type:'guide-sync',action:'publish',channel,guide:snapshot,credentials},origin);
+   if(message.action==='ready')popup.postMessage({type:'guide-sync',action:'publish',channel,guide:snapshot,credentials,baseRevision:Number.isInteger(syncState?.revision)?syncState.revision:null},origin);
    if(message.action==='paired'){
     credentials=message.credentials;
     try{localStorage.setItem(credentialKey,JSON.stringify(credentials));}catch{}
    }
-   if(message.action==='complete'){saveNotice.textContent='HTML 備份已下載，線上講義也已更新成功。';cleanup();}
+   if(message.action==='complete'){rememberRevision(message.revision,snapshot);saveNotice.textContent='HTML 備份已下載，線上講義也已更新成功。';cleanup();}
    if(message.action==='error'){saveNotice.textContent='HTML 備份已下載，線上更新未完成：'+message.message;cleanup();}
   };
   window.addEventListener('message',receive);
@@ -598,11 +651,15 @@ if(location.protocol==='file:'||window.guideCloud){
  };
  action(menu,'匯出',()=>{
   closeMenu();
-  const json=JSON.stringify(draft).replace(/</g,'\\u003c');
-  const html=publicTemplate.replace('<!--CONFIG-->',()=>'<script>window.guideConfig='+json+';</scr'+'ipt>');
-  const url=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
-  const link=document.createElement('a');link.href=url;link.download='index.html';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  downloadGuide(draft);
   if(location.protocol==='file:')publishOnline(draft);
  });
  renderEditor();
+ if(location.protocol==='file:'){
+  checkForCloud();
+  window.addEventListener('online',checkForCloud);
+  window.addEventListener('focus',checkForCloud);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkForCloud();});
+  setInterval(checkForCloud,60000);
+ }
 }
