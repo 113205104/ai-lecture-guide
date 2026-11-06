@@ -33,6 +33,18 @@ html { overflow-x: auto; }
 #editor select,
 #editor input { max-inline-size: 100%; box-sizing: border-box; }
 
+/* 手機與平板的編輯視窗加高，超出的內容沿用彈窗內捲動。 */
+@media (max-width: 1119px) {
+  #editor {
+    height: 75vh;
+    height: 75dvh;
+    min-height: 65vh;
+    min-height: 65dvh;
+    max-height: 90vh;
+    max-height: 90dvh;
+  }
+}
+
 .guide-cloud-login {
   position: fixed; right: 18px; top: 18px; z-index: 20;
   height: 46px; min-width: 46px; padding: 0 12px; border: 1px solid #a9c4c5;
