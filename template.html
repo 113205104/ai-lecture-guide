@@ -124,7 +124,8 @@
 .lecture-mock article .guide-static-content>.lg-description{flex:initial;margin-bottom:0}
 .lecture-mock article .guide-static-content>.lg-prompt:first-child{margin-top:0}
 .lecture-mock .guide-section-heading::before,.lecture-mock .guide-section-heading::after{content:none!important}
-.lecture-mock .guide-section-heading{grid-column:1/-1;margin:12px 0 0;padding:0;border:0!important;box-shadow:none!important;background:none!important;color:#183c43;font-size:clamp(18px,2vw,22px);line-height:1.35;font-weight:700}
+.lecture-mock .guide-catalog-section{display:contents}
+.lecture-mock :is(.guide-section-heading,.guide-catalog-heading){grid-column:1/-1;margin:12px 0 0;padding:0;border:0!important;box-shadow:none!important;background:none!important;color:#183c43;font-size:clamp(18px,2vw,22px);line-height:1.35;font-weight:700}
 .lecture-mock .guide-section-edit{display:none}
 .guide-editing .lecture-mock .guide-section-heading{cursor:pointer}
 .guide-editing .lecture-mock .guide-section-edit{display:inline-block;margin-left:12px;padding:5px 10px;border:1px solid #a9c4c5;border-radius:8px;background:#fff;color:#176b73;font-size:14px}
@@ -252,7 +253,7 @@ function desktopNotes(card){
   .replace('。.gitignore','。<br>.gitignore');
 }
 for(const [id,focus] of [['guide-cards',false]]){
- const root=document.getElementById(id);let group=config.position?.group||0,subpage=config.position?.page||0,step=0,category='全部';
+ const root=document.getElementById(id);let group=config.position?.group||0,subpage=config.position?.page||0,step=0;
  const style={page:'#f3f7f7',card:'#ffffff',border:'#bdd1d3',button:'#176b73',buttonText:'#ffffff',copy:'#245a43',text:'#203c43',size:16,bold:false,italic:false,...config.style};
  root.innerHTML='<header><div><div class="lg-eyebrow">'+config.labels.eyebrow+'</div><div class="lg-brand">'+config.labels.brand+'</div></div></header><h2>把 AI 用在你的下一個任務</h2><p class="lg-intro"></p><nav role="tablist" aria-label="講座四個進度"></nav><div class="lg-grid"></div><div class="lg-stepnav" '+(focus?'':'hidden')+'></div><div class="lg-live" aria-live="polite"></div><footer><span>'+config.labels.footer+'</span><span>工具連結以新分頁開啟 ↗</span></footer>';
  const grid=root.querySelector('.lg-grid'),nav=root.querySelector('nav'),live=root.querySelector('.lg-live');grid.id=id+'-content';grid.setAttribute('role','tabpanel');
@@ -277,7 +278,7 @@ for(const [id,focus] of [['guide-cards',false]]){
  function apply(){for(const [k,v] of Object.entries({bg:style.page,card:style.card,line:style.border,button:style.button,'button-text':style.buttonText,copy:style.copy,text:style.text})) root.style.setProperty('--lg-'+k,v);
 document.body.style.setProperty('--guide-background',style.page);
 root.style.fontSize=style.size+'px';
-for(const [key,token] of [['mainSize','main'],['sectionSize','section'],['cardTitleSize','card-title'],['descriptionSize','description'],['bodySize','body']]){
+for(const [key,token] of [['mainSize','main'],['sectionSize','section'],['cardTitleSize','card-title'],['tagSize','tag'],['descriptionSize','description'],['bodySize','body']]){
  const size=Number(style[key]);
  if(size>=12&&size<=72)root.style.setProperty('--guide-'+token+'-size',size+'px');
  else root.style.removeProperty('--guide-'+token+'-size');
@@ -311,16 +312,32 @@ root.querySelectorAll('.lg-description,.lg-prompt').forEach(el=>{el.style.fontWe
  filters.hidden=!allTools;
  grid.classList.remove('guide-custom-layout');grid.classList.toggle('lg-basics',group===0);
  grid.classList.toggle('lg-research',group===2);
- grid.style.gridTemplateColumns=allTools?'repeat(auto-fit,minmax(min(100%,220px),1fr))':'';
+ grid.style.gridTemplateColumns=allTools?([1,2,3,4].includes(page.catalogColumns)?'repeat('+page.catalogColumns+',minmax(0,1fr))':'repeat(auto-fit,minmax(min(100%,220px),1fr))'):'';
  const stepnav=root.querySelector('.lg-stepnav');stepnav.hidden=true;
  live.textContent='';
  if(allTools){
- if(!filters.querySelector('.lg-filter-options')){filters.innerHTML='<div class="lg-category"><div class="lg-filter-options" role="group" aria-label="工具用途">'+categories.map(c=>'<button type="button" class="lg-secondary">'+c+'</button>').join('')+'</div><span class="lg-category-count"></span></div>';filters.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>{category=categories[i];render()});}
- filters.querySelectorAll('button').forEach((b,i)=>{const active=categories[i]===category;b.className=active?'lg-primary':'lg-secondary';b.setAttribute('aria-pressed',String(active))});
- const visible=tools.filter(a=>!page.excludedTools?.includes(a[0])&&(category==='全部'||(toolCategories[a[0]]||[]).includes(category)));
- filters.querySelector('.lg-category-count').textContent=visible.length+' 個工具';
- grid.innerHTML=visible.map(a=>'<article><span class="lg-tag">'+a[1]+'</span><h3><a class="lg-tool-title" href="'+a[3]+'" target="_blank" rel="noopener noreferrer">'+a[0]+'</a></h3><p class="lg-description">'+a[2]+'</p></article>').join('');
- live.textContent=category+' · '+visible.length+' 個工具';grid.querySelectorAll('article').forEach((card,i)=>card.dataset.tool=tools.indexOf(visible[i]));bindCardFocus();apply();document.dispatchEvent(new Event('guide-rendered'));return;}
+ const visible=tools.filter(tool=>!page.excludedTools?.includes(tool[0]));
+ filters.textContent=visible.length+' 個工具';
+ grid.replaceChildren();
+ const rendered=new Set();
+ const appendSection=(name,entries)=>{
+  if(!entries.length)return;
+  const section=document.createElement('div');
+  section.className='guide-catalog-section';
+  section.dataset.toolSection=name;
+  section.innerHTML='<div role="heading" aria-level="3" class="guide-catalog-heading"><span class="guide-section-title"></span></div>';
+  section.querySelector('.guide-section-title').textContent=name;
+  section.insertAdjacentHTML('beforeend',entries.map(a=>'<article data-tool="'+tools.indexOf(a)+'"><span class="lg-tag">'+a[1]+'</span><h3><a class="lg-tool-title" href="'+a[3]+'" target="_blank" rel="noopener noreferrer">'+a[0]+'</a></h3><p class="lg-description">'+a[2]+'</p></article>').join(''));
+  entries.forEach(tool=>rendered.add(tool));
+  grid.append(section);
+ };
+ for(const name of categories){
+  if(name==='全部')continue;
+  appendSection(name,visible.filter(tool=>(toolCategories[tool[0]]||[]).includes(name)));
+ }
+ appendSection('未分類',visible.filter(tool=>!rendered.has(tool)));
+ live.textContent='全部 · '+visible.length+' 個工具';
+ bindCardFocus();apply();document.dispatchEvent(new Event('guide-rendered'));return;}
  const items=page?.items||[];grid.style.setProperty('--guide-columns',String(page?.columns||1));grid.classList.add('guide-custom-layout');
  grid.innerHTML=items.map((a,index)=>desktopHeading(page,index)+'<article>'+taskToolLine(a)+'<h3>'+a[1]+'</h3>'+cardBody(a)+(a[7]===false?'':'<div class="lg-actions"><button type="button" class="lg-secondary" data-copy>'+config.labels.copy+'</button></div>')+'</article>').join('')+desktopHeading(page,items.length);
  grid.querySelectorAll('details').forEach(details=>{
@@ -433,6 +450,8 @@ body:has(.lecture-mock){min-height:100vh;background:var(--guide-background,#f3f7
 .lecture-mock>h2{font-size:var(--guide-main-size,30px)}
 .lecture-mock .guide-section-title{font-size:var(--guide-section-size,inherit)}
 .lecture-mock .lg-grid article h3{font-size:var(--guide-card-title-size,22px)}
+.lecture-mock article .lg-tag{font-size:var(--guide-tag-size,12px)}
+.lecture-mock.guide-uniform-sizes article .lg-tag :not(img){font-size:inherit!important}
 .lecture-mock>.lg-intro,.lecture-mock article .lg-description{font-size:var(--guide-description-size,18px)}
 .lecture-mock article .lg-prompt,.lecture-mock article summary{font-size:var(--guide-body-size,18px)}
 .lecture-mock.guide-uniform-sizes :is(h2,.guide-section-title,.lg-grid article h3,.lg-intro,.lg-description,.lg-prompt) :not(img){font-size:inherit!important}

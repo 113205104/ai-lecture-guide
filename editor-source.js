@@ -160,7 +160,7 @@ if(location.protocol==='file:'||window.guideCloud){
    return;
   }
   if(card&&!e.target.closest('summary,[data-copy]')){
-   target=card.dataset.tool!==undefined?{kind:'tool',index:Number(card.dataset.tool)}:{kind:'card',group,page,index:Number(card.dataset.card)};
+   target=card.dataset.tool!==undefined?{kind:'tool',index:Number(card.dataset.tool),section:card.parentElement.dataset.toolSection}:{kind:'card',group,page,index:Number(card.dataset.card)};
   }else if(e.target.closest('header,footer'))target={kind:'labels'};
   else if(e.target.closest('h2,.lg-intro,nav,.lg-filter-options'))target={kind:'page',group,page};
   else return;
@@ -204,7 +204,7 @@ if(location.protocol==='file:'||window.guideCloud){
  };
  const box=(parent,title)=>{const f=document.createElement('fieldset');const l=document.createElement('legend');l.textContent=title;f.append(l);parent.append(f);return f;};
  const safeUrl=value=>{try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch{return '';}};
- function cardOrder(parent,list,index,order=list.map((_,i)=>i)){
+ function cardOrder(parent,list,index,order=list.map((_,i)=>i),section){
   const controls=document.createElement('div');
   controls.className='guide-card-order';
   parent.append(controls);
@@ -221,7 +221,7 @@ if(location.protocol==='file:'||window.guideCloud){
     const page=draft.groups.flatMap(group=>group.pages||[]).find(page=>page.items===list);
     sectionModel.duplicate(page,index);
    }
-   showCardChange(list,index+1,index,'已複製卡片，副本放在原卡片後方。');
+   showCardChange(list,index+1,index,'已複製卡片，副本放在原卡片後方。',section);
   });
   for(const [label,offset] of [['上移',-1],['下移',1]]){
    const destination=order[position+offset];
@@ -229,7 +229,7 @@ if(location.protocol==='file:'||window.guideCloud){
     if(destination===undefined)return;
     const [card]=list.splice(index,1);
     list.splice(destination,0,card);
-    showCardChange(list,destination,destination,'已'+label+'卡片，目前在第 '+(position+offset+1)+' 張。');
+    showCardChange(list,destination,destination,'已'+label+'卡片，目前在第 '+(position+offset+1)+' 張。',section);
    }).disabled=destination===undefined;
   }
   controls.addEventListener('click',event=>event.stopPropagation());
@@ -244,7 +244,10 @@ if(location.protocol==='file:'||window.guideCloud){
   const list=page.catalog?draft.tools:page.items;
   const order=cards.map(card=>Number(card.dataset[key]));
   cards.forEach((card,index)=>{
-   if(!card.querySelector('.guide-card-order'))cardOrder(card,list,order[index],order);
+   if(card.querySelector('.guide-card-order'))return;
+   const section=card.parentElement.dataset.toolSection;
+   const sectionOrder=section===undefined?order:Array.from(card.parentElement.querySelectorAll('article'),entry=>Number(entry.dataset[key]));
+   cardOrder(card,list,order[index],sectionOrder,section);
   });
  }
  document.addEventListener('guide-rendered',addCardOrderControls);
@@ -305,12 +308,13 @@ if(location.protocol==='file:'||window.guideCloud){
   });
  }
  document.addEventListener('guide-rendered',addPageOrderControls);
- function showCardChange(list,index,editingIndex,message){
+ function showCardChange(list,index,editingIndex,message,section){
   const keepEditorOpen=editor.open;
   if(keepEditorOpen)target.index=editingIndex;
   else record();
   refresh();
-  const card=document.querySelector('.lecture-mock article[data-'+(list===draft.tools?'tool':'card')+'="'+index+'"]');
+  const cards=Array.from(document.querySelectorAll('.lecture-mock article[data-'+(list===draft.tools?'tool':'card')+'="'+index+'"]'));
+  const card=cards.find(entry=>entry.parentElement.dataset.toolSection===section)??cards[0];
   if(card){
    card.classList.add('guide-card-changed');
    if(!keepEditorOpen){
@@ -375,7 +379,7 @@ if(location.protocol==='file:'||window.guideCloud){
   if(target.kind==='appearance')for(const [key,label,value] of [['page','頁面底色','#f3f7f7'],['card','卡片底色','#ffffff'],['border','卡片邊框','#bdd1d3'],['button','按鈕與連結','#176b73'],['buttonText','按鈕文字','#ffffff'],['copy','複製按鈕','#245a43'],['text','全站文字','#203c43']])field(common,label,draft.style[key]||value,v=>draft.style[key]=v,'color');
   if(target.kind==='appearance'){
    const typography=box(form,'講義字級（px）');
-   const sizes=[['mainSize','主標題',30,42],['sectionSize','分區副標題',22,30],['cardTitleSize','卡片標題',22,30],['descriptionSize','說明文字',18,24],['bodySize','展開內文',18,24]];
+   const sizes=[['mainSize','主標題',30,42],['sectionSize','分區副標題',22,30],['cardTitleSize','卡片標題',22,30],['tagSize','卡片編號與標籤',12,12],['descriptionSize','說明文字',18,24],['bodySize','展開內文',18,24]];
    for(const [key,label,normal] of sizes){
     field(typography,label,draft.style[key]??normal,value=>{
      if(value==='')delete draft.style[key];
@@ -424,7 +428,19 @@ if(location.protocol==='file:'||window.guideCloud){
     target={kind:'page',group:i,page:Math.max(0,Math.min(index,group.pages.length-1))};
     refresh({group:i,page:target.page});renderEditor();
    });
-   if(page.catalog)return;
+   if(page.catalog){
+    const layouts=box(pageBox,'卡片排版');
+    const choices=[];
+    for(let columns=1;columns<=4;columns++){
+     const button=action(layouts,'▦'.repeat(columns)+' 每列 '+columns+' 張',()=>{
+      page.catalogColumns=columns;
+      choices.forEach((choice,index)=>choice.setAttribute('aria-pressed',String(index+1===columns)));
+     });
+     button.setAttribute('aria-pressed',String(page.catalogColumns===columns));
+     choices.push(button);
+    }
+    return;
+   }
    const headings=box(pageBox,'新增副標題');
    const headingPosition=document.createElement('select');
    headingPosition.setAttribute('aria-label','新增副標題的位置');
@@ -505,8 +521,9 @@ if(location.protocol==='file:'||window.guideCloud){
   draft.tools.forEach((tool,i)=>{
    if(target.kind!=='tool'||target.index!==i)return;
    const item=box(catalog,'工具 '+(i+1));
-   const visibleTools=Array.from(document.querySelectorAll('.lecture-mock article[data-tool]'),card=>Number(card.dataset.tool));
-   cardOrder(item,draft.tools,i,visibleTools);
+   const visibleTools=Array.from(document.querySelectorAll('.lecture-mock article[data-tool]'))
+    .filter(card=>card.parentElement.dataset.toolSection===target.section).map(card=>Number(card.dataset.tool));
+   cardOrder(item,draft.tools,i,visibleTools,target.section);
    for(const [k,label] of [[0,'名稱'],[1,'標籤'],[2,'說明']])field(item,label,tool[k],v=>{if(k===0){draft.toolCategories[v]=draft.toolCategories[tool[0]]||[];delete draft.toolCategories[tool[0]];}tool[k]=v;});
    field(item,'網址',tool[3],v=>tool[3]=safeUrl(v),'url');
    for(const category of draft.categories.slice(1)){
