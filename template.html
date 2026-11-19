@@ -310,8 +310,8 @@ root.querySelectorAll('.lg-description,.lg-prompt').forEach(el=>{el.style.fontWe
  });
  root.querySelector('h2').innerHTML=pageTitles[group];
  filters.hidden=!allTools;
- grid.classList.remove('guide-custom-layout');grid.classList.toggle('lg-basics',group===0);
- grid.classList.toggle('lg-research',group===2);
+ grid.classList.remove('guide-custom-layout');grid.classList.toggle('lg-basics',(groups[group].layoutRole??group)===0);
+ grid.classList.toggle('lg-research',(groups[group].layoutRole??group)===2);
  grid.style.gridTemplateColumns=allTools?([1,2,3,4].includes(page.catalogColumns)?'repeat('+page.catalogColumns+',minmax(0,1fr))':'repeat(auto-fit,minmax(min(100%,220px),1fr))'):'';
  const stepnav=root.querySelector('.lg-stepnav');stepnav.hidden=true;
  live.textContent='';
@@ -440,10 +440,10 @@ body:has(.lecture-mock){min-height:100vh;background:var(--guide-background,#f3f7
 .guide-editing .lecture-mock .guide-card-order,#editor .guide-card-order{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
 .lecture-mock .guide-card-order button{padding:5px 10px;border:1px solid var(--lg-line);border-radius:8px;background:var(--lg-card);color:var(--lg-text);font-size:14px}
 .guide-card-order button:disabled{opacity:.45;cursor:default}
-.lecture-mock .guide-page-drag{display:inline-flex;margin-right:7px;padding:2px 5px;border:1px solid currentColor;border-radius:5px;cursor:grab;user-select:none}
-.lecture-mock .guide-page-drag:active{cursor:grabbing}
-.lecture-mock [data-page-index].guide-drop-before{box-shadow:-4px 0 0 var(--lg-button)}
-.lecture-mock [data-page-index].guide-drop-after{box-shadow:4px 0 0 var(--lg-button)}
+.lecture-mock .guide-page-drag,.lecture-mock .guide-group-drag{display:inline-flex;margin-right:7px;padding:2px 5px;border:1px solid currentColor;border-radius:5px;cursor:grab;user-select:none}
+.lecture-mock .guide-page-drag:active,.lecture-mock .guide-group-drag:active{cursor:grabbing}
+.lecture-mock [data-page-index].guide-drop-before,.lecture-mock nav > .lg-tab.guide-drop-before{box-shadow:-4px 0 0 var(--lg-button)}
+.lecture-mock [data-page-index].guide-drop-after,.lecture-mock nav > .lg-tab.guide-drop-after{box-shadow:4px 0 0 var(--lg-button)}
 .guide-editing .lecture-mock article.guide-card-changed{outline:3px solid var(--lg-button);outline-offset:3px}
 .guide-editing .lecture-mock article:hover,.guide-editing .lecture-mock h2:hover,.guide-editing .lecture-mock .lg-intro:hover{outline:2px solid #176b73;outline-offset:3px}
 .lecture-mock img{max-width:100%;height:auto}

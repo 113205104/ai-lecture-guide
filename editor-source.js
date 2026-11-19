@@ -124,6 +124,7 @@ if(location.protocol==='file:'||window.guideCloud){
   document.body.classList.add('guide-editing');
   addCardOrderControls();
   addPageOrderControls();
+  addGroupOrderControls();
   if(target)openEditor();
  };
  edit.onclick=()=>{
@@ -147,7 +148,7 @@ if(location.protocol==='file:'||window.guideCloud){
   button.guideFeedbackTimer=setTimeout(()=>button.classList.remove('guide-clicked'),220);
  },true);
  document.addEventListener('click',e=>{
-  if(!editing||e.target.closest('.guide-card-order,.guide-page-drag'))return;
+  if(!editing||e.target.closest('.guide-card-order,.guide-page-drag,.guide-group-drag'))return;
   const root=e.target.closest('.lecture-mock');
   if(!root)return;
   const group=Number(root.dataset.group),page=Number(root.dataset.subpage);
@@ -251,6 +252,70 @@ if(location.protocol==='file:'||window.guideCloud){
   });
  }
  document.addEventListener('guide-rendered',addCardOrderControls);
+
+ let draggedGroup=null;
+ function moveGroup(sourceIndex,destinationIndex){
+  const groups=draft.groups;
+  if(!Number.isInteger(sourceIndex)||!Number.isInteger(destinationIndex)||sourceIndex<0||sourceIndex>=groups.length||destinationIndex<0||destinationIndex>=groups.length||sourceIndex===destinationIndex)return;
+  const root=document.querySelector('.lecture-mock');
+  const selectedGroup=groups[Number(root.dataset.group)];
+  const selectedPage=Number(root.dataset.subpage);
+  const editedGroup=target?.group!==undefined?groups[target.group]:null;
+  const savedGroup=draft.position?groups[draft.position.group]:null;
+  // Keep existing group-specific presentation attached to its content.
+  groups.forEach((group,index)=>{group.layoutRole??=index;});
+  const [group]=groups.splice(sourceIndex,1);
+  groups.splice(destinationIndex,0,group);
+  const [title]=draft.pageTitles.splice(sourceIndex,1);
+  draft.pageTitles.splice(destinationIndex,0,title);
+  if(editedGroup)target.group=groups.indexOf(editedGroup);
+  if(savedGroup)draft.position.group=groups.indexOf(savedGroup);
+  if(!editor.open)record();
+  refresh({group:groups.indexOf(selectedGroup),page:selectedPage});
+  const message='主頁籤已移到第 '+(destinationIndex+1)+' 個位置。';
+  if(editor.open){renderEditor();status.textContent=message;}
+  else{saveNotice.textContent=message;saveNotice.hidden=false;}
+ }
+ function addGroupOrderControls(){
+  const root=document.querySelector('.lecture-mock');
+  const tabs=Array.from(root.querySelectorAll('nav > .lg-tab'));
+  const clear=()=>tabs.forEach(tab=>tab.classList.remove('guide-drop-before','guide-drop-after'));
+  if(!editing){
+   tabs.forEach(tab=>{tab.querySelector('.guide-group-drag')?.remove();tab.ondragover=tab.ondragleave=tab.ondrop=null;});
+   draggedGroup=null;clear();return;
+  }
+  tabs.forEach((tab,index)=>{
+   if(tab.querySelector('.guide-group-drag'))return;
+   const handle=document.createElement('span');
+   handle.className='guide-group-drag';handle.textContent='⠿';handle.draggable=true;
+   handle.title='拖曳調整主頁籤順序，也可點選頁籤後使用前移、後移';
+   handle.setAttribute('aria-label','拖曳調整主頁籤順序');
+   handle.onclick=event=>event.stopPropagation();
+   handle.ondragstart=event=>{
+    draggedGroup=index;
+    event.dataTransfer.effectAllowed='move';
+    event.dataTransfer.setData('text/plain',String(index));
+   };
+   handle.ondragend=()=>{draggedGroup=null;clear();};
+   const after=event=>event.clientX>tab.getBoundingClientRect().left+tab.getBoundingClientRect().width/2;
+   tab.ondragover=event=>{
+    if(!editing||draggedGroup===null)return;
+    event.preventDefault();event.dataTransfer.dropEffect='move';clear();
+    tab.classList.add(after(event)?'guide-drop-after':'guide-drop-before');
+   };
+   tab.ondragleave=()=>tab.classList.remove('guide-drop-before','guide-drop-after');
+   tab.ondrop=event=>{
+    if(!editing||draggedGroup===null)return;
+    event.preventDefault();event.stopPropagation();
+    const source=draggedGroup,insertion=index+(after(event)?1:0);
+    draggedGroup=null;clear();
+    moveGroup(source,insertion-(source<insertion?1:0));
+   };
+   tab.prepend(handle);
+  });
+ }
+ document.addEventListener('guide-rendered',addGroupOrderControls);
+
  let draggedPage=null;
  function movePage(groupIndex,sourceIndex,destinationIndex){
   const pages=draft.groups[groupIndex].pages;
@@ -400,6 +465,12 @@ if(location.protocol==='file:'||window.guideCloud){
   draft.groups.forEach((group,i)=>{
    if(i!==target.group)return;
    const panel=box(form,'分頁 '+(i+1));
+   if(target.kind==='page'){
+    const order=document.createElement('div');panel.append(order);
+    for(const [label,offset] of [['主頁籤前移',-1],['主頁籤後移',1]]){
+     action(order,label,()=>moveGroup(i,i+offset)).disabled=i+offset<0||i+offset>=draft.groups.length;
+    }
+   }
    field(panel,'頁籤名稱',group.name,v=>group.name=v);
    field(panel,'標題',draft.pageTitles[i],v=>draft.pageTitles[i]=v);
    field(panel,'說明',group.subtitle,v=>group.subtitle=v);
@@ -659,7 +730,15 @@ if(location.protocol==='file:'||window.guideCloud){
  const historyControls=document.createElement('div');historyControls.id='guide-history';historyControls.hidden=true;
  document.body.append(historyControls);
  const refresh=position=>{window.refreshGuide(draft,position);undo.disabled=!past.length;redo.disabled=!future.length;};
- const travel=(from,to)=>{if(!from.length)return;to.push(last);last=from.pop();draft=JSON.parse(last);saveNotice.hidden=true;refresh();};
+ const travel=(from,to)=>{
+  if(!from.length)return;
+  const root=document.querySelector('.lecture-mock');
+  const selected=Number(root.dataset.group),page=Number(root.dataset.subpage);
+  const role=draft.groups[selected].layoutRole??selected;
+  to.push(last);last=from.pop();draft=JSON.parse(last);saveNotice.hidden=true;
+  const group=draft.groups.findIndex((entry,index)=>(entry.layoutRole??index)===role);
+  refresh({group:group<0?0:group,page});
+ };
  const undo=action(historyControls,'↶',()=>travel(past,future));
  const redo=action(historyControls,'↷',()=>travel(future,past));
  action(historyControls,'完成',finish).className='guide-finish';
